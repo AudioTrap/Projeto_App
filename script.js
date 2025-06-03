@@ -1,4 +1,4 @@
-const URL = "https://teachablemachine.withgoogle.com/models/I9hL16mkw/";
+const URL = "https://teachablemachine.withgoogle.com/models/-wiVr2DM4/";
 
 let recognizer;
 
@@ -23,14 +23,29 @@ async function init() {
     const output = document.getElementById("audio-alert");
     const alertImage = document.getElementById("alert-image");
 
-    if (label === "alarme de incêndio" && confidence > 0.75) {
-      output.innerText = `🚨 Alarme de incêndio (${(confidence * 100).toFixed(2)}%)`;
-      alertImage.src = "imagens/sirene.png";
+    if (confidence > 0.75) {
+      output.innerText = `🔊 Som detectado: ${label} (${(confidence * 100).toFixed(2)}%)`;
+
+      if (label === "Buzina") {
+        alertImage.src = "imagens/buzina.png";
+      } else if (label === "Cachorro-latindo") {
+        alertImage.src = "imagens/cachorro-latindo.png";
+      } else if (label === "Sirene") {
+        alertImage.src = "imagens/sirene.png";
+      } else if (label === "Palmas") {
+        alertImage.src = "imagens/palmas.png";
+      } else if (label === "Estalos") {
+        alertImage.src = "imagens/estalos.png";
+      } else {
+        alertImage.src = "imagens/som-desconhecido.png"; 
+      }
+
       alertImage.style.display = "block";
     } else {
       output.innerText = "Aguardando som...";
       alertImage.style.display = "none";
     }
+
   }, {
     includeSpectrogram: true,
     probabilityThreshold: 0.75,
