@@ -1,68 +1,89 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>AudioTrap</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AudioTrap</title>
+  <link rel="stylesheet" href="style.css" />
 
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.4.0/dist/speech-commands.min.js"></script>
-    <script defer src="script.js"></script>
+  <!-- TensorFlow para reconhecimento de som -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.4.0"></script>
+
+  <!-- Leaflet CSS e JS para mapa gratuito (sem integrity) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+    crossorigin=""
+  />
+  <script
+    defer
+    src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+    crossorigin=""
+  ></script>
+
+  <!-- Script do seu projeto -->
+  <script defer src="script.js"></script>
+
 </head>
 
 <body>
-    <header>
-        <h1>AudioTrap</h1>
-        <nav>
-            <a href="#inicio">Início</a>
-            <a href="#como-funciona">Como funciona</a>
-            <a href="#detector">Detector</a>
-            <a href="#equipe">Equipe</a>
-            <a href="#contato">Contato</a>
-        </nav>
-    </header>
+  <header>
+    <h1>AudioTrap</h1>
+    <nav>
+      <a href="#inicio">Início</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#equipe">Equipe</a>
+      <a href="#contato">Contato</a>
+    </nav>
+  </header>
 
-    <section id="inicio">
-        <h2>Início</h2>
-        <p>Bem-vindo ao AudioTrap! Um app inclusivo que detecta sons importantes como latidos, buzinas e sirenes, enviando alertas visuais para pessoas com deficiência auditiva.</p>
-    </section>
+  <section id="inicio">
+    <h2>Início</h2>
+    <p>Bem-vindo ao AudioTrap! Um app inclusivo que detecta sons importantes como latidos, buzinas e sirenes.</p>
 
-    <section id="como-funciona">
-        <h2>Como Funciona</h2>
-        <ol>
-            <li>O microfone capta os sons do ambiente.</li>
-            <li>O modelo inteligente reconhece sons como latidos, buzinas e alarmes.</li>
-            <li>Um alerta visual é exibido na tela com imagem e descrição.</li>
-        </ol>
-    </section>
+    <!-- Detecção de som -->
+    <button onclick="init()">Iniciar Detecção</button>
+    <div id="onda"></div>
+    <p id="audio-alert">Aguardando som...</p>
+    <img id="alert-image" src="imagens/sirene.png" alt="Som detectado" style="display: none; max-width: 200px" />
 
-    <section id="detector">
-      <h2>Detector de Sons</h2>
-      <button onclick="init()">Iniciar Detector</button>
-      <p id="audio-alert">Aguardando som...</p>
-      <img
-        id="alert-image"
-        src="imagens/sirene.png"
-        alt="Som detectado"
-        style="display: none; max-width: 200px"/>
+    <!-- Mapa e inputs -->
+    <h3>Digite sua origem e destino</h3>
+    <input type="text" id="start" placeholder="Seu local atual (ex: Porto Velho)" />
+    <input type="text" id="end" placeholder="Destino (ex: Hospital Municipal)" />
+    <button onclick="calculateRoute()">Mostrar Localizações</button>
 
-    </section>
+    <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
 
-    <section id="equipe">
-        <h2>Equipe</h2>
-        <p>Somos o time NorthGirls, estudantes do IFRO comprometidas em promover a inclusão através da tecnologia.</p>
-    </section>
+    <!-- Feedbacks -->
+    <h4>Feedbacks do destino:</h4>
+    <ul id="lista-feedbacks"></ul>
+  </section>
 
-    <section id="contato">
-        <h2>Contato</h2>
-        <p>Email: <a href="mailto:audiotrapp4g.com">audiotrapp4g.com</a></p>
-        <p>Instagram: <a href="https://instagram.com/audiotrap.ro" target="_blank">@audiotrap.ro</a></p>
-        <p>TikTok: <a href="https://tiktok.com/@audiotrap.ro" target="_blank">@audiotrap.ro</a></p>
-    </section>
+  <section id="como-funciona">
+    <h2>Como Funciona</h2>
+    <ol>
+      <li>O microfone capta os sons do ambiente.</li>
+      <li>O modelo reconhece sons como latidos, buzinas e alarmes.</li>
+      <li>Um alerta visual é exibido.</li>
+    </ol>
+  </section>
 
-    <footer>
-        &copy; 2025 AudioTrap - NorthGirls
-    </footer>
+  <section id="equipe">
+    <h2>Equipe</h2>
+    <p>Somos o time NorthGirls, estudantes do IFRO promovendo inclusão através da tecnologia.</p>
+  </section>
+
+  <section id="contato">
+    <h2>Contato</h2>
+    <p>Email: <a href="mailto:audiotrapp4g.com">audiotrapp4g.com</a></p>
+    <p>Instagram: <a href="https://instagram.com/audiotrap.ro">@audiotrap.ro</a></p>
+    <p>TikTok: <a href="https://tiktok.com/@audiotrap.ro">@audiotrap.ro</a></p>
+  </section>
+
+  <footer>
+    &copy; 2025 AudioTrap - NorthGirls
+  </footer>
 </body>
 </html>
