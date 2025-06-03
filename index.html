@@ -61,14 +61,26 @@
     <ul id="lista-feedbacks"></ul>
   </section>
 
-  <section id="como-funciona">
-    <h2>Como Funciona</h2>
-    <ol>
-      <li>O microfone capta os sons do ambiente.</li>
-      <li>O modelo reconhece sons como latidos, buzinas e alarmes.</li>
-      <li>Um alerta visual é exibido.</li>
-    </ol>
-  </section>
+    <section id="como-funciona">
+        <h2>Como Funciona</h2>
+        <ol>
+            <li>O microfone capta os sons do ambiente.</li>
+            <li>O modelo inteligente reconhece sons como latidos, buzinas e alarmes.</li>
+            <li>Um alerta visual é exibido na tela com imagem e descrição.</li>
+        </ol>
+    </section>
+
+    <section id="detector">
+      <h2>Detector de Sons</h2>
+      <button onclick="init()">Iniciar Detector</button>
+      <p id="audio-alert">Aguardando som...</p>
+      <img
+        id="alert-image"
+        src="imagens/sirene.png"
+        alt="Som detectado"
+        style="display: none; max-width: 200px"/>
+
+    </section>
 
   <section id="equipe">
     <h2>Equipe</h2>
@@ -82,8 +94,8 @@
     <p>TikTok: <a href="https://tiktok.com/@audiotrap.ro">@audiotrap.ro</a></p>
   </section>
 
-  <footer>
-    &copy; 2025 AudioTrap - NorthGirls
-  </footer>
+    <footer>
+        &copy; 2025 AudioTrap - NorthGirls
+    </footer>
 </body>
 </html>

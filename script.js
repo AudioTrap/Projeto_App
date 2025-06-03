@@ -1,4 +1,4 @@
-const modelURL = "https://teachablemachine.withgoogle.com/models/I9hL16mkw/";
+const URL = "https://teachablemachine.withgoogle.com/models/I9hL16mkw/";
 
 let recognizer;
 let map;
@@ -28,12 +28,14 @@ async function init() {
     const alertImage = document.getElementById("alert-image");
 
     if (label === "alarme de incêndio" && confidence > 0.75) {
-      output.innerText = `🚨 Alarme de incêndio detectado (${(confidence * 100).toFixed(2)}%)`;
+      output.innerText = `🚨 Alarme de incêndio (${(confidence * 100).toFixed(2)}%)`;
+      alertImage.src = "imagens/sirene.png";
       alertImage.style.display = "block";
     } else {
       output.innerText = "Aguardando som...";
       alertImage.style.display = "none";
     }
+
   }, {
     includeSpectrogram: true,
     probabilityThreshold: 0.75,
