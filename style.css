@@ -57,11 +57,3 @@ footer {
     margin-top: 3rem;
 }
 
-/* Abas */
-.aba {
-    display: none;
-}
-
-.aba.ativa {
-    display: block;
-}

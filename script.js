@@ -1,64 +1,40 @@
-let classifier;
-let modelURL = "https://teachablemachine.withgoogle.com/models/crs48Q1do/";
+const URL = "https://teachablemachine.withgoogle.com/models/I9hL16mkw/";
 
-window.addEventListener('DOMContentLoaded', () => {
-    // Inicia o classificador de som
-    ml5.soundClassifier(modelURL + "model.json", { probabilityThreshold: 0.75 }, (err, c) => {
-        if (err) {
-            console.error(err);
-            return;
-        }
-        classifier = c;
-        classifier.classify(gotResult);
-    });
+let recognizer;
 
-    // Lógica de abas
-    document.querySelectorAll("nav a").forEach(link => {
-        link.addEventListener("click", e => {
-            e.preventDefault();
-            const id = link.getAttribute("href").substring(1);
-            mostrarAba(id);
-        });
-    });
+async function createModel() {
+  const checkpointURL = URL + "model.json";
+  const metadataURL = URL + "metadata.json";
 
-    mostrarAba("inicio"); // Aba padrão
-});
+  recognizer = speechCommands.create("BROWSER_FFT", undefined, checkpointURL, metadataURL);
+  await recognizer.ensureModelLoaded();
+}
 
-function gotResult(error, results) {
-    if (error) {
-        console.error(error);
-        return;
-    }
+async function init() {
+  await createModel();
+  const classLabels = recognizer.wordLabels();
 
-    const label = results[0].label;
-    const confidence = (results[0].confidence * 100).toFixed(2);
+  recognizer.listen(result => {
+    const scores = result.scores;
+    const index = scores.indexOf(Math.max(...scores));
+    const label = classLabels[index];
+    const confidence = scores[index];
+
     const output = document.getElementById("audio-alert");
     const alertImage = document.getElementById("alert-image");
 
-    if (label === "Buzina" && confidence > 80) {
-        output.innerText = `🚗 Som de buzina detectado (${confidence}%)`;
-        alertImage.src = "imagens/buzina.png";
-        alertImage.style.display = "block";
-    } else if (label === "Latido" && confidence > 80) {
-        output.innerText = `🐶 Latido detectado (${confidence}%)`;
-        alertImage.src = "imagens/latido.png";
-        alertImage.style.display = "block";
-    } else if (label === "Sirene" && confidence > 80) {
-        output.innerText = `🚨 Sirene detectada (${confidence}%)`;
-        alertImage.src = "imagens/sirene.png";
-        alertImage.style.display = "block";
+    if (label === "alarme de incêndio" && confidence > 0.75) {
+      output.innerText = `🚨 Alarme de incêndio (${(confidence * 100).toFixed(2)}%)`;
+      alertImage.src = "imagens/sirene.png";
+      alertImage.style.display = "block";
     } else {
-        output.innerText = "Aguardando som...";
-        alertImage.style.display = "none";
+      output.innerText = "Aguardando som...";
+      alertImage.style.display = "none";
     }
-}
-
-function mostrarAba(id) {
-    const abas = document.querySelectorAll(".aba");
-    abas.forEach(aba => aba.classList.remove("ativa"));
-
-    const abaAtiva = document.getElementById(id);
-    if (abaAtiva) {
-        abaAtiva.classList.add("ativa");
-    }
+  }, {
+    includeSpectrogram: true,
+    probabilityThreshold: 0.75,
+    invokeCallbackOnNoiseAndUnknown: true,
+    overlapFactor: 0.5,
+  });
 }
