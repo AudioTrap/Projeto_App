@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Abrir Chrome com AudioTrap",
+            "url": "http://localhost:5500",  // Porta do Live Server
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}
