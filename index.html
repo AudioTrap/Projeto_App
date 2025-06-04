@@ -10,21 +10,12 @@
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.4.0"></script>
 
-  <!-- Leaflet CSS e JS para mapa gratuito (sem integrity) -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-    crossorigin=""
-  />
-  <script
-    defer
-    src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
-    crossorigin=""
-  ></script>
+  <!-- Leaflet CSS e JS para o mapa -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <script defer src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 
-  <!-- Script do seu projeto -->
+  <!-- Script principal -->
   <script defer src="script.js"></script>
-
 </head>
 
 <body>
@@ -42,45 +33,30 @@
     <h2>Início</h2>
     <p>Bem-vindo ao AudioTrap! Um app inclusivo que detecta sons importantes como latidos, buzinas e sirenes.</p>
 
-    <!-- Detecção de som -->
     <button onclick="init()">Iniciar Detecção</button>
     <div id="onda"></div>
     <p id="audio-alert">Aguardando som...</p>
-    <img id="alert-image" src="imagens/sirene.png" alt="Som detectado" style="display: none; max-width: 200px" />
+    <img id="alert-image" src="imagens/sirene.png" alt="Som detectado" style="display: none; max-width: 200px;" />
 
-    <!-- Mapa e inputs -->
     <h3>Digite sua origem e destino</h3>
     <input type="text" id="start" placeholder="Seu local atual (ex: Porto Velho)" />
     <input type="text" id="end" placeholder="Destino (ex: Hospital Municipal)" />
     <button onclick="calculateRoute()">Mostrar Localizações</button>
 
-    <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+    <div id="map"></div>
 
-    <!-- Feedbacks -->
     <h4>Feedbacks do destino:</h4>
     <ul id="lista-feedbacks"></ul>
   </section>
 
-    <section id="como-funciona">
-        <h2>Como Funciona</h2>
-        <ol>
-            <li>O microfone capta os sons do ambiente.</li>
-            <li>O modelo inteligente reconhece sons como latidos, buzinas e alarmes.</li>
-            <li>Um alerta visual é exibido na tela com imagem e descrição.</li>
-        </ol>
-    </section>
-
-    <section id="detector">
-      <h2>Detector de Sons</h2>
-      <button onclick="init()">Iniciar Detector</button>
-      <p id="audio-alert">Aguardando som...</p>
-      <img
-        id="alert-image"
-        src="imagens/sirene.png"
-        alt="Som detectado"
-        style="display: none; max-width: 200px"/>
-
-    </section>
+  <section id="como-funciona">
+    <h2>Como Funciona</h2>
+    <ol>
+      <li>O microfone capta os sons do ambiente.</li>
+      <li>O modelo inteligente reconhece sons como latidos, buzinas e alarmes.</li>
+      <li>Um alerta visual é exibido na tela com imagem e descrição.</li>
+    </ol>
+  </section>
 
   <section id="equipe">
     <h2>Equipe</h2>
@@ -94,8 +70,8 @@
     <p>TikTok: <a href="https://tiktok.com/@audiotrap.ro">@audiotrap.ro</a></p>
   </section>
 
-    <footer>
-        &copy; 2025 AudioTrap - NorthGirls
-    </footer>
+  <footer>
+    &copy; 2025 AudioTrap - NorthGirls
+  </footer>
 </body>
 </html>
