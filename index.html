@@ -16,6 +16,7 @@
         <li><a href="#como-funciona">Como Funciona</a></li>
         <li><a href="#detector">Detector</a></li>
         <li><a href="#feedback">Feedback</a></li>
+        <li><a href="#sonora">Sonora</a></li>
         <li><a href="#equipe">Equipe</a></li>
         <li><a href="#contato">Contato</a></li>
       </ul>
@@ -24,6 +25,7 @@
 
   <section id="inicio" class="hero">
     <div class="content">
+      <img src="imagens/logo.png" alt="Logo do projeto" style="border-radius: 50%; width: 150px;" width="300"  />
       <h1>Bem-vindo ao AudioTrap</h1>
       <p>Segurança sonora e mobilidade para pessoas com deficiência auditiva.</p>
       <div class="sound-wave"></div>
@@ -32,7 +34,8 @@
 
   <section id="como-funciona">
     <h2>Como Funciona</h2>
-    <p>O AudioTrap detecta sons como buzinas, sirenes e latidos em tempo real, usando IA treinada com o Teachable Machine. Ele exibe alertas visuais com ícones, além de um mapa interativo com feedbacks sobre a acessibilidade de destinos próximos.</p>
+    <p>O AudioTrap detecta sons como buzinas, sirenes e latidos em tempo real. Ele exibe alertas visuais com ícones, além de um mapa interativo com feedbacks sobre a acessibilidade dos locais.</p>
+    <hr/>
   </section>
 
   <section id="detector">
@@ -41,12 +44,16 @@
     <button onclick="init()">🎤 Ativar Detecção de Som</button>
     <div id="audio-alert">Aguardando som...</div>
     <img id="alert-image" alt="Alerta Sonoro" style="display:none;" />
+    <hr/>
+    <br> 
+    <br>
     
-    <h3>Mapa Interativo</h3>
+    <h2>Mapa Interativo</h2>
     <input type="text" id="start" placeholder="Endereço de origem" />
     <input type="text" id="end" placeholder="Endereço de destino" />
     <button onclick="calculateRoute()">Ver rota e feedbacks</button>
     <div id="mapa"></div>
+    <hr/>
   </section>
 
   <section id="feedback">
@@ -63,11 +70,29 @@
       <input type="range" min="1" max="5" id="recom" />
       <button type="submit">Enviar</button>
     </form>
+    <hr/>
   </section>
+
+
+<section id="sonora" class="sonora-section">
+  <div class="sonora-title">
+    <img src="imagens/sonora.png" alt="Ícone da Sonora" class="sonora-icon">
+    <h2>Sonora</h2>
+  </div>
+  <p class="sonora-description">
+  A <strong>Sonora</strong> é a assistente virtual do AudioTrap, desenvolvida para facilitar a experiência do usuario com o site.</p>
+  <br>
+  <button class="sonora-button">🎙️ Falar com a Sonora</button>
+  <br>
+  <br>
+  <hr/>
+</section>
 
   <section id="equipe">
     <h2>Equipe</h2>
-    <p>Somos um grupo de pesquisadores e estudantes apaixonados por acessibilidade e inovação. Criamos o AudioTrap com foco em melhorar a mobilidade urbana para pessoas surdas ou com deficiência auditiva.</p>
+    <p>Somos um grupo de pesquisadoras e estudantes apaixonadas por acessibilidade e inovação. Criamos o AudioTrap com foco em melhorar a mobilidade urbana para pessoas surdas ou com deficiência auditiva e tornar sua rotina msi segura.</p>
+    <img src="imagens/equipe.png" alt="Equipe no evento Desafio Liga Jovem" width="900" />
+    <hr/>
   </section>
 
   <section id="contato">
@@ -75,6 +100,7 @@
     <p>Email: <a href="mailto:audiotrapp4g.com">audiotrapp4g.com</a></p>
     <p>Instagram: <a href="https://instagram.com/audiotrap.ro">@audiotrap.ro</a></p>
     <p>TikTok: <a href="https://tiktok.com/@audiotrap.ro">@audiotrap.ro</a></p>
+    <hr/>
   </section>
 
   <footer>
