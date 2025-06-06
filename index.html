@@ -6,7 +6,6 @@
   <title>AudioTrap - Acessibilidade Sonora</title>
   <link rel="stylesheet" href="style.css"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-  <script type="module" src="script.js"></script>
 </head>
 <body>
   <header>
@@ -24,101 +23,125 @@
     </nav>
   </header>
 
-  <section id="inicio" class="hero">
-    <div class="content">
-      <img src="imagens/logo.png" alt="Logo do projeto" style="border-radius: 50%; width: 150px;" />
-      <h1>Bem-vindo ao AudioTrap</h1>
-      <p>Segurança e mobilidade para pessoas com deficiência auditiva.</p>
-      <div class="sound-wave"></div>
-    </div>
-  </section>
-
-  <section id="como-funciona">
-    <h2>Como Funciona</h2>
-    <p>O AudioTrap detecta sons como buzinas, sirenes e latidos em tempo real. Ele exibe alertas visuais com ícones, além de um mapa interativo com feedbacks sobre a acessibilidade dos locais.</p>
-    <hr/>
-  </section>
-
-  <section id="detector">
-    <h2>Detector de Som</h2>
-    <p>Ative abaixo para detectar sons do ambiente em tempo real.</p>
-    <button onclick="init()">🎤 Ativar Detecção de Som</button>
-    <div id="audio-alert" class="audio-alert">Aguardando som...</div>
-    <img id="alert-image" alt="Alerta Sonoro" style="display:none; margin: 0 auto; max-width: 120px;" />
-    <hr/>
-    <br><br>
-
-    <h2 style="color:#2143A3">Mapa Interativo</h2>
-    <input type="text" id="start" placeholder="Endereço de origem" />
-    <input type="text" id="end" placeholder="Endereço de destino" />
-    <button onclick="calculateRoute()">Ver rota e feedbacks</button>
-    <div id="mapa" style="height: 400px; margin-top: 20px;"></div>
-    <hr/>
-  </section>
-
-  <section id="feedback">
-    <h2>Feedbacks do Destino</h2>
-    <ul id="lista-feedbacks"></ul>
-
-    <form id="feedback-form">
-      <label for="acess">Acessibilidade: ♿</label>
-      <div class="slider-container">
-        <div class="slider-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
-        <input type="range" id="acess" name="acess" min="1" max="5" value="3">
+  <main>
+    <section id="inicio" class="hero">
+      <div class="content">
+        <img src="imagens/logo.png" alt="Logo do projeto" style="border-radius: 50%; width: 150px;" />
+        <h1>Bem-vindo ao AudioTrap</h1>
+        <p>Segurança e mobilidade para pessoas com deficiência auditiva.</p>
+        <div class="sound-wave"></div>
       </div>
+    </section>
 
-      <label for="mov">Movimentação: 🚶‍♂️</label>
-      <div class="slider-container">
-        <div class="slider-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
-        <input type="range" id="mov" name="mov" min="1" max="5" value="3">
+    <section id="como-funciona">
+      <h2>Como Funciona</h2>
+      <p>O AudioTrap detecta sons como buzinas, sirenes e latidos em tempo real. Ele exibe alertas visuais com ícones, além de um mapa interativo com feedbacks sobre a acessibilidade dos locais.</p>
+      <hr/>
+    </section>
+
+    <section id="detector">
+      <h2>Detector de Som</h2>
+      <p>Ative abaixo para detectar sons do ambiente em tempo real.</p>
+      <button onclick="init()">🎤 Ativar Detecção de Som</button>
+      <div id="audio-alert" class="audio-alert" style="text-align:center; font-size:1.5em; margin-top: 10px;">Aguardando som...</div>
+      <img id="alert-image" alt="Alerta Sonoro" style="display:none; margin: 10px auto; max-width: 120px; display: block;" />
+      <hr/>
+      <br><br>
+
+      <h2 style="color:#2143A3">Mapa Interativo</h2>
+      <input type="text" id="start" placeholder="Endereço de origem" />
+      <input type="text" id="end" placeholder="Endereço de destino" />
+      <button onclick="calculateRoute()">Ver rota e feedbacks</button>
+      <div id="mapa" style="height: 400px; margin-top: 20px;"></div>
+      <hr/>
+    </section>
+
+    <section id="feedback">
+      <h2>Feedbacks do Destino</h2>
+      <ul id="lista-feedbacks"></ul>
+
+      <form id="feedback-form">
+        <label for="acess">Acessibilidade: ♿</label>
+        <div class="slider-container">
+          <div class="slider-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+          <input type="range" id="acess" name="acess" min="1" max="5" value="3" />
+        </div>
+
+        <label for="mov">Movimentação: 🚶‍♂️</label>
+        <div class="slider-container">
+          <div class="slider-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+          <input type="range" id="mov" name="mov" min="1" max="5" value="3" />
+        </div>
+
+        <label for="recom">Recomendação: ⭐</label>
+        <div class="slider-container">
+          <div class="slider-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+          <input type="range" id="recom" name="recom" min="1" max="5" value="3" />
+        </div>
+
+        <button type="submit">Enviar Feedback</button>
+      </form>
+      <hr/>
+    </section>
+
+    <section id="sonora" class="sonora-section">
+      <div class="sonora-title">
+        <img src="imagens/sonora.png" alt="Ícone da Sonora" class="sonora-icon" />
+        <h2>Sonora</h2>
       </div>
+      <p class="sonora-description">
+        A <strong>Sonora</strong> é a assistente virtual do AudioTrap, desenvolvida para facilitar a experiência do usuário com o site.
+      </p>
+      <button class="sonora-button">🎙️ Falar com a Sonora</button>
+      <hr/>
+    </section>
 
-      <label for="recom">Recomendação: ⭐</label>
-      <div class="slider-container">
-        <div class="slider-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
-        <input type="range" id="recom" name="recom" min="1" max="5" value="3">
-      </div>
+    <section id="equipe">
+      <h2>Equipe</h2>
+      <p>Somos um grupo de pesquisadoras e estudantes apaixonadas por acessibilidade e inovação.</p>
+      <img src="imagens/equipe.png" alt="Equipe no evento Desafio Liga Jovem" style="width: 100%; max-width: 900px;" />
+      <hr/>
+    </section>
 
-      <button type="submit">Enviar Feedback</button>
-    </form>
-  </section>
-
-  <section id="sonora" class="sonora-section">
-    <div class="sonora-title">
-      <img src="imagens/sonora.png" alt="Ícone da Sonora" class="sonora-icon">
-      <h2>Sonora</h2>
-    </div>
-    <p class="sonora-description">
-      A <strong>Sonora</strong> é a assistente virtual do AudioTrap, desenvolvida para facilitar a experiência do usuário com o site.
-    </p>
-    <br>
-    <button class="sonora-button">🎙️ Falar com a Sonora</button>
-    <br><br><hr/>
-  </section>
-
-  <section id="equipe">
-    <h2>Equipe</h2>
-    <p>Somos um grupo de pesquisadoras e estudantes apaixonadas por acessibilidade e inovação.</p>
-    <img src="imagens/equipe.png" alt="Equipe no evento Desafio Liga Jovem" style="width: 100%; max-width: 900px;" />
-    <hr/>
-  </section>
-
-  <section id="contato">
-    <h2>Fale Conosco</h2>
-    <p>Email: <a href="mailto:audiotrapp4g@gmail.com">audiotrapp4g@gmail.com</a></p>
-    <p>Instagram: <a href="https://instagram.com/audiotrap.ro">@audiotrap.ro</a></p>
-    <p>TikTok: <a href="https://tiktok.com/@audiotrap.ro">@audiotrap.ro</a></p>
-    <hr/>
-  </section>
+    <section id="contato">
+      <h2>Fale Conosco</h2>
+      <p>Email: <a href="mailto:audiotrapp4g@gmail.com">audiotrapp4g@gmail.com</a></p>
+      <p>Instagram: <a href="https://instagram.com/audiotrap.ro" target="_blank" rel="noopener noreferrer">@audiotrap.ro</a></p>
+      <p>TikTok: <a href="https://tiktok.com/@audiotrap.ro" target="_blank" rel="noopener noreferrer">@audiotrap.ro</a></p>
+      <hr/>
+    </section>
+  </main>
 
   <footer>
     <p>&copy; 2025 AudioTrap. Todos os direitos reservados.</p>
   </footer>
 
-  <!-- Scripts -->
+  <!-- Bibliotecas -->
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands"></script>
+
+  <!-- Firebase (modular) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBrQ8qo5eZdkdukmLYvIilI6kv51Z9p8Gg",
+      authDomain: "audiotrap-23.firebaseapp.com",
+      projectId: "audiotrap-23",
+      storageBucket: "audiotrap-23.appspot.com",
+      messagingSenderId: "49187410477",
+      appId: "1:49187410477:web:98bc5f8f90025e56775ea4",
+      measurementId: "G-7J8EHXJSPT"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    window.firebaseApp = app;
+  </script>
+
+  <!-- Script principal -->
   <script type="module" src="script.js"></script>
 </body>
 </html>
