@@ -310,18 +310,113 @@ input[type=range]::-moz-range-thumb:hover {
   background-color: #22A1A3;
 }
 
-/* Responsividade */
-@media (max-width: 600px) {
+/* ... (suas variáveis, base e estilos existentes permanecem iguais) */
+
+/* RESPONSIVIDADE GERAL */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0;
+    margin-top: 1rem;
+  }
+
+  nav a {
+    padding: 0.5rem 0;
+    width: 100%;
+    display: block;
+  }
+
+  .hero {
+    padding: 2rem 1rem;
+  }
+
+  section {
+    padding: 2rem 1rem;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  button {
+    font-size: 0.95rem;
+    padding: 0.6rem 1rem;
+  }
+
+  #mapa {
+    height: 250px;
+  }
+
   .feedback-cards {
     flex-direction: column;
+  }
+
+  .card {
+    flex: 1 1 100%;
+  }
+
+  form {
+    gap: 0.8rem;
+  }
+
+  .wave-container {
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
+  #nomeSomDetectado {
+    font-size: 1.2rem;
+    padding: 0.6rem;
+  }
+
+  .slider-labels span {
+    font-size: 0.75rem;
   }
 
   .sonora-title {
     flex-direction: column;
     align-items: flex-start;
+    gap: 8px;
   }
 
-  .wave-container {
-    justify-content: center;
+  .sonora-title h2 {
+    font-size: 1.2rem;
+  }
+
+  .sonora-button {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+
+  footer {
+    font-size: 0.9rem;
+  }
+}
+
+/* iPhones muito pequenos ou dispositivos em modo paisagem */
+@media (max-width: 400px) {
+  header, section, .hero {
+    padding: 1rem;
+  }
+
+  nav ul {
+    font-size: 0.95rem;
+  }
+
+  .bar {
+    width: 8px;
+  }
+
+  .sonora-button {
+    width: 100%;
+    text-align: center;
   }
 }

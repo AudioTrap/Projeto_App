@@ -2,9 +2,9 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AudioTrap - Acessibilidade Sonora</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
 </head>
 <body>
@@ -26,7 +26,7 @@
   <main>
     <section id="inicio" class="hero">
       <div class="content">
-        <img src="imagens/logo.png" alt="Logo do projeto" style="border-radius: 50%; width: 150px;" />
+        <img src="imagens/logo.png" alt="Logo do AudioTrap" style="border-radius: 50%; width: 150px;" loading="lazy" />
         <h1>Bem-vindo ao AudioTrap</h1>
         <p>Segurança e mobilidade para pessoas com deficiência auditiva.</p>
         <div class="sound-wave"></div>
@@ -35,8 +35,8 @@
 
     <section id="como-funciona">
       <h2>Como Funciona</h2>
-      <p>O AudioTrap detecta sons como buzinas, sirenes e latidos em tempo real. Ele exibe alertas visuais com ícones, além de um mapa interativo com feedbacks sobre a acessibilidade dos locais.</p>
-      <hr/>
+      <p>O AudioTrap detecta sons como buzinas, sirenes e latidos em tempo real. Ele exibe alertas visuais com ícones e oferece um mapa interativo com feedbacks sobre a acessibilidade dos locais.</p>
+      <hr />
     </section>
 
     <section id="detector">
@@ -44,16 +44,15 @@
       <p>Ative abaixo para detectar sons do ambiente em tempo real.</p>
       <button onclick="init()">🎤 Ativar Detecção de Som</button>
       <div id="audio-alert" class="audio-alert" style="text-align:center; font-size:1.5em; margin-top: 10px;">Aguardando som...</div>
-      <img id="alert-image" alt="Alerta Sonoro" style="display:none; margin: 10px auto; max-width: 120px; display: block;" />
-      <hr/>
-      <br><br>
+      <img id="alert-image" alt="Imagem do som detectado" style="display:none; margin: 10px auto; max-width: 120px;" loading="lazy" />
+      <hr />
 
-      <h2 style="color:#2143A3">Mapa Interativo</h2>
+      <h2 style="color:#2143A3;">Mapa Interativo</h2>
       <input type="text" id="start" placeholder="Endereço de origem" />
       <input type="text" id="end" placeholder="Endereço de destino" />
       <button onclick="calculateRoute()">Ver rota e feedbacks</button>
       <div id="mapa" style="height: 400px; margin-top: 20px;"></div>
-      <hr/>
+      <hr />
     </section>
 
     <section id="feedback">
@@ -81,26 +80,26 @@
 
         <button type="submit">Enviar Feedback</button>
       </form>
-      <hr/>
+      <hr />
     </section>
 
     <section id="sonora" class="sonora-section">
       <div class="sonora-title">
-        <img src="imagens/sonora.png" alt="Ícone da Sonora" class="sonora-icon" />
+        <img src="imagens/sonora.png" alt="Ícone da assistente Sonora" class="sonora-icon" loading="lazy" />
         <h2>Sonora</h2>
       </div>
       <p class="sonora-description">
         A <strong>Sonora</strong> é a assistente virtual do AudioTrap, desenvolvida para facilitar a experiência do usuário com o site.
       </p>
       <button class="sonora-button">🎙️ Falar com a Sonora</button>
-      <hr/>
+      <hr />
     </section>
 
     <section id="equipe">
       <h2>Equipe</h2>
       <p>Somos um grupo de pesquisadoras e estudantes apaixonadas por acessibilidade e inovação.</p>
-      <img src="imagens/equipe.png" alt="Equipe no evento Desafio Liga Jovem" style="width: 100%; max-width: 900px;" />
-      <hr/>
+      <img src="imagens/equipe.png" alt="Foto da equipe do projeto AudioTrap no evento Desafio Liga Jovem" style="width: 100%; max-width: 900px;" loading="lazy" />
+      <hr />
     </section>
 
     <section id="contato">
@@ -108,7 +107,7 @@
       <p>Email: <a href="mailto:audiotrapp4g@gmail.com">audiotrapp4g@gmail.com</a></p>
       <p>Instagram: <a href="https://instagram.com/audiotrap.ro" target="_blank" rel="noopener noreferrer">@audiotrap.ro</a></p>
       <p>TikTok: <a href="https://tiktok.com/@audiotrap.ro" target="_blank" rel="noopener noreferrer">@audiotrap.ro</a></p>
-      <hr/>
+      <hr />
     </section>
   </main>
 

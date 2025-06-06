@@ -1,9 +1,9 @@
-// Importações do Firebase
+// Firebase SDKs
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-analytics.js";
 import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-database.js";
 
-// Configuração do Firebase
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyBrQ8qo5eZdkdukmLYvIilI6kv51Z9p8Gg",
   authDomain: "audiotrap-23.firebaseapp.com",
@@ -15,24 +15,25 @@ const firebaseConfig = {
   measurementId: "G-7J8EHXJSPT"
 };
 
-// Inicializar Firebase apenas uma vez
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const analytics = getAnalytics(app);
-const database = getDatabase(app);
+const database = getDatabase(app, firebaseConfig.databaseURL);
 
-// Reconhecimento de som com Teachable Machine
-const modelURL = "https://teachablemachine.withgoogle.com/models/I9hL16mkw/";
+// Reconhecimento de som
 let recognizer;
-let map;
-let markers = [];
+const modelURL = "https://teachablemachine.withgoogle.com/models/I9hL16mkw/";
 
 async function createModel() {
-  const checkpointURL = modelURL + "model.json";
-  const metadataURL = modelURL + "metadata.json";
-  recognizer = speechCommands.create("BROWSER_FFT", undefined, checkpointURL, metadataURL);
+  const script = document.createElement('script');
+  script.src = "https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands";
+  document.head.appendChild(script);
+  await new Promise(resolve => script.onload = resolve);
+
+  recognizer = speechCommands.create("BROWSER_FFT", undefined, modelURL + "model.json", modelURL + "metadata.json");
   await recognizer.ensureModelLoaded();
 }
 
+// Iniciar reconhecimento
 async function init() {
   try {
     await createModel();
@@ -45,6 +46,8 @@ async function init() {
       const confidence = scores[index];
       const output = document.getElementById("audio-alert");
       const alertImage = document.getElementById("alert-image");
+
+      output.innerText = "Aguardando som...";
 
       if (confidence > 0.75) {
         let emoji = "🔊";
@@ -79,11 +82,12 @@ async function init() {
             <div class="confidence">Confiança: ${(confidence * 100).toFixed(1)}%</div>
           </div>
         `;
-        alertImage.src = imageSrc;
-        alertImage.style.display = "block";
+        if (alertImage) {
+          alertImage.src = imageSrc;
+          alertImage.style.display = "block";
+        }
       } else {
-        output.innerText = "Aguardando som...";
-        alertImage.style.display = "none";
+        if (alertImage) alertImage.style.display = "none";
       }
     }, {
       includeSpectrogram: true,
@@ -91,13 +95,15 @@ async function init() {
       invokeCallbackOnNoiseAndUnknown: true,
       overlapFactor: 0.5,
     });
-  } catch (error) {
-    console.error("Erro ao iniciar reconhecimento:", error);
-    alert("Erro ao iniciar o reconhecimento de som. Por favor, tente novamente.");
+  } catch (err) {
+    console.error("Erro ao iniciar reconhecimento:", err);
   }
 }
 
-// Mapa e Rota
+// Mapa
+let map;
+let markers = [];
+
 function initMap() {
   map = L.map('mapa').setView([-10.2, -62.8], 13);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -114,19 +120,14 @@ async function geocode(address) {
   const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
   try {
     const response = await fetch(url);
-    if (!response.ok) throw new Error("Erro na resposta da API de geocoding");
     const data = await response.json();
-    if (data.length > 0) {
-      return {
-        lat: parseFloat(data[0].lat),
-        lon: parseFloat(data[0].lon),
-        display_name: data[0].display_name
-      };
-    } else {
-      return null;
-    }
+    return data.length > 0 ? {
+      lat: parseFloat(data[0].lat),
+      lon: parseFloat(data[0].lon),
+      display_name: data[0].display_name
+    } : null;
   } catch (err) {
-    console.error("Erro ao buscar endereço:", err);
+    console.error("Erro ao buscar geolocalização:", err);
     return null;
   }
 }
@@ -136,7 +137,7 @@ async function calculateRoute() {
   const destino = document.getElementById("end").value.trim();
 
   if (!origem || !destino) {
-    alert("Por favor, preencha origem e destino.");
+    alert("Preencha origem e destino!");
     return;
   }
 
@@ -146,7 +147,7 @@ async function calculateRoute() {
   const destinoCoord = await geocode(destino);
 
   if (!origemCoord || !destinoCoord) {
-    alert("Endereço(s) não encontrado(s). Verifique e tente novamente.");
+    alert("Endereço não encontrado.");
     return;
   }
 
@@ -157,9 +158,7 @@ async function calculateRoute() {
   destinoMarker.addTo(map);
 
   markers.push(origemMarker, destinoMarker);
-
-  const group = L.featureGroup(markers);
-  map.fitBounds(group.getBounds(), { padding: [50, 50] });
+  map.fitBounds(L.featureGroup(markers).getBounds(), { padding: [50, 50] });
 
   mostrarFeedbacks(destino);
 }
@@ -167,27 +166,23 @@ async function calculateRoute() {
 // Feedbacks
 function mostrarFeedbacks(destino) {
   const lista = document.getElementById("lista-feedbacks");
-  lista.innerHTML = "<li>🔄 Carregando feedbacks...</li>";
+  lista.innerHTML = "<li>Carregando feedbacks...</li>";
 
-  const chaveFeedback = "feedbacks/" + destino.replace(/\W+/g, "_");
-  console.log("Buscando feedbacks na chave:", chaveFeedback);
-
-  const feedbackRef = ref(database, chaveFeedback);
+  const chave = "feedbacks/" + destino.replace(/\W+/g, "_");
+  const feedbackRef = ref(database, chave);
 
   onValue(feedbackRef, snapshot => {
     lista.innerHTML = "";
-
     if (!snapshot.exists()) {
-      lista.innerHTML = "<li>❔ Sem feedbacks cadastrados.</li>";
+      lista.innerHTML = "<li>Sem feedbacks disponíveis.</li>";
       return;
     }
 
     snapshot.forEach(child => {
-      const data = child.val();
-      const acess = `${"♿".repeat(data.acess || 0)} (${data.acess || 0})`;
-      const mov = `${"🚶‍♂️".repeat(data.mov || 0)} (${data.mov || 0})`;
-      const recom = `${"⭐".repeat(data.recom || 0)} (${data.recom || 0})`;
-
+      const fb = child.val();
+      const acess = `♿`.repeat(fb.acess || 0) + ` (${fb.acess || 0})`;
+      const mov = `🚶‍♂️`.repeat(fb.mov || 0) + ` (${fb.mov || 0})`;
+      const recom = `⭐`.repeat(fb.recom || 0) + ` (${fb.recom || 0})`;
       const li = document.createElement("li");
       li.textContent = `${acess} ${mov} ${recom}`;
       lista.appendChild(li);
@@ -195,7 +190,6 @@ function mostrarFeedbacks(destino) {
   });
 }
 
-// Envio do Feedback com Promise
 document.getElementById("feedback-form").addEventListener("submit", function (e) {
   e.preventDefault();
   const acess = parseInt(document.getElementById("acess").value);
@@ -204,28 +198,24 @@ document.getElementById("feedback-form").addEventListener("submit", function (e)
   const destino = document.getElementById("end").value.trim();
 
   if (!destino) {
-    alert("Informe um destino para associar o feedback.");
+    alert("Preencha o destino.");
     return;
   }
 
+  const chave = "feedbacks/" + destino.replace(/\W+/g, "_");
+  const feedbackRef = ref(database, chave);
   const feedback = { acess, mov, recom };
-  const chaveFeedback = "feedbacks/" + destino.replace(/\W+/g, "_");
-  console.log("Enviando feedback na chave:", chaveFeedback);
 
-  const feedbackRef = ref(database, chaveFeedback);
   push(feedbackRef, feedback)
     .then(() => {
-      alert("✅ Feedback enviado! Obrigado 😊");
+      alert("✅ Feedback enviado!");
       mostrarFeedbacks(destino);
     })
     .catch(err => {
-      alert("Erro ao enviar feedback: " + err.message);
+      alert("Erro ao salvar feedback: " + err.message);
     });
 });
 
-// Inicialização do mapa ao carregar a página
 window.addEventListener("load", initMap);
-
-// Tornar funções acessíveis no escopo global
 window.init = init;
 window.calculateRoute = calculateRoute;
