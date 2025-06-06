@@ -63,13 +63,14 @@
     <form id="feedback-form">
       <h3>Envie seu Feedback</h3>
       <label>Acessibilidade: ♿</label>
-      <input type="range" min="1" max="5" id="acess" />
+      <input type="range" id="acess" min="0" max="5">
       <label>Movimentação: 🚶‍♂️</label>
-      <input type="range" min="1" max="5" id="mov" />
+      <input type="range" id="mov" min="0" max="5">
       <label>Recomendação: ⭐</label>
-      <input type="range" min="1" max="5" id="recom" />
+      <input type="range" id="recom" min="0" max="5">
       <button type="submit">Enviar</button>
     </form>
+    <ul id="lista-feedbacks"></ul>
     <hr/>
   </section>
 

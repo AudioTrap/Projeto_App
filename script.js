@@ -159,11 +159,12 @@ function mostrarFeedbacks(destino) {
 document.getElementById("feedback-form").addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const acess = document.getElementById("acess").value;
-  const mov = document.getElementById("mov").value;
-  const recom = document.getElementById("recom").value;
+  const acess = parseInt(document.getElementById("acess").value);
+  const mov = parseInt(document.getElementById("mov").value);
+  const recom = parseInt(document.getElementById("recom").value);
 
-  const emoji = (num, icon) => icon.repeat(num);
+// repetir emojis
+  const emoji = (num, icon) => icon.repeat(parseInt(num));
 
   const li = document.createElement("li");
   li.textContent = `${emoji(acess, "♿")} ${emoji(mov, "🚶‍♂️")} ${emoji(recom, "⭐")} - Seu feedback`;

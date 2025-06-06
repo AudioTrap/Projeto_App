@@ -215,3 +215,30 @@ footer {
     height: 100px;
   }
 }
+
+#lista-feedbacks {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  font-size: 1.2rem;
+}
+
+#lista-feedbacks li {
+  margin-bottom: 0.5rem;
+  background: #f2f2f2;
+  padding: 0.6rem;
+  border-radius: 8px;
+}
+#lista-feedbacks {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  font-size: 1.2rem;
+}
+
+#lista-feedbacks li {
+  margin-bottom: 0.5rem;
+  background: #f2f2f2;
+  padding: 0.6rem;
+  border-radius: 8px;
+}
