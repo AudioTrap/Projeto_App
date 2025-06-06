@@ -6,6 +6,7 @@
   <title>AudioTrap - Acessibilidade Sonora</title>
   <link rel="stylesheet" href="style.css"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <script type="module" src="script.js"></script>
 </head>
 <body>
   <header>
@@ -43,7 +44,7 @@
     <p>Ative abaixo para detectar sons do ambiente em tempo real.</p>
     <button onclick="init()">🎤 Ativar Detecção de Som</button>
     <div id="audio-alert" class="audio-alert">Aguardando som...</div>
-    <img id="alert-image" alt="Alerta Sonoro" style="display:none; margin: 0 auto;" />
+    <img id="alert-image" alt="Alerta Sonoro" style="display:none; margin: 0 auto; max-width: 120px;" />
     <hr/>
     <br><br>
 
@@ -51,7 +52,7 @@
     <input type="text" id="start" placeholder="Endereço de origem" />
     <input type="text" id="end" placeholder="Endereço de destino" />
     <button onclick="calculateRoute()">Ver rota e feedbacks</button>
-    <div id="mapa"></div>
+    <div id="mapa" style="height: 400px; margin-top: 20px;"></div>
     <hr/>
   </section>
 
@@ -98,13 +99,13 @@
   <section id="equipe">
     <h2>Equipe</h2>
     <p>Somos um grupo de pesquisadoras e estudantes apaixonadas por acessibilidade e inovação.</p>
-    <img src="imagens/equipe.png" alt="Equipe no evento Desafio Liga Jovem" width="900" />
+    <img src="imagens/equipe.png" alt="Equipe no evento Desafio Liga Jovem" style="width: 100%; max-width: 900px;" />
     <hr/>
   </section>
 
   <section id="contato">
     <h2>Fale Conosco</h2>
-    <p>Email: <a href="mailto:audiotrapp4g.com">audiotrapp4g.com</a></p>
+    <p>Email: <a href="mailto:audiotrapp4g@gmail.com">audiotrapp4g@gmail.com</a></p>
     <p>Instagram: <a href="https://instagram.com/audiotrap.ro">@audiotrap.ro</a></p>
     <p>TikTok: <a href="https://tiktok.com/@audiotrap.ro">@audiotrap.ro</a></p>
     <hr/>
@@ -114,10 +115,10 @@
     <p>&copy; 2025 AudioTrap. Todos os direitos reservados.</p>
   </footer>
 
+  <!-- Scripts -->
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands"></script>
   <script type="module" src="script.js"></script>
 </body>
 </html>
- 

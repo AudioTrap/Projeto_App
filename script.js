@@ -1,19 +1,25 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+// Importações do Firebase
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-analytics.js";
+
+// Configuração do Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyChm3frIOrGwCSG1Ru9J8Pp0ha2xATC8Tg",
+  apiKey: "AIzaSyBrQ8qo5eZdkdukmLYvIilI6kv51Z9p8Gg",
   authDomain: "audiotrap-23.firebaseapp.com",
+  databaseURL: "https://audiotrap-23-default-rtdb.firebaseio.com", // ✅ ESSENCIAL
   projectId: "audiotrap-23",
-  storageBucket: "audiotrap-23.appspot.com",
+  storageBucket: "audiotrap-23.firebasestorage.app", // ✅ corrigido
   messagingSenderId: "49187410477",
-  appId: "1:49187410477:android:6061b9bc610ca302775ea4",
-  databaseURL: "https://audiotrap-23-default-rtdb.firebaseio.com"
+  appId: "1:49187410477:web:98bc5f8f90025e56775ea4"
 };
 
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+// Inicializar Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
 
+
+// Reconhecimento de som
 const modelURL = "https://teachablemachine.withgoogle.com/models/I9hL16mkw/";
 let recognizer;
 let map;
@@ -85,6 +91,7 @@ async function init() {
   });
 }
 
+// Mapa e Rota
 function initMap() {
   map = L.map('mapa').setView([-10.2, -62.8], 13);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -142,30 +149,41 @@ async function calculateRoute() {
   map.fitBounds(group.getBounds(), { padding: [50, 50] });
 
   markers.push(...group.getLayers());
+
   mostrarFeedbacks(destino);
 }
 
+// Feedbacks
 function mostrarFeedbacks(destino) {
   const lista = document.getElementById("lista-feedbacks");
-  lista.innerHTML = `<li>Carregando feedbacks...</li>`;
+  lista.innerHTML = "<li>🔄 Carregando feedbacks...</li>";
 
   const feedbackRef = ref(database, "feedbacks/" + destino.replace(/\W+/g, "_"));
-  fetch(`https://audiotrap-23-default-rtdb.firebaseio.com/feedbacks/${destino.replace(/\W+/g, "_")}.json`)
-    .then(res => res.json())
-    .then(data => {
-      lista.innerHTML = "";
-      if (data) {
-        Object.values(data).forEach(fb => {
-          const li = document.createElement("li");
-          li.textContent = `${"♿".repeat(fb.acess)} ${"🚶‍♂️".repeat(fb.mov)} ${"⭐".repeat(fb.recom)}`;
-          lista.appendChild(li);
-        });
-      } else {
-        lista.innerHTML = "<li>❔ Sem feedbacks cadastrados para este local.</li>";
-      }
+
+  onValue(feedbackRef, snapshot => {
+    lista.innerHTML = "";
+
+    if (!snapshot.exists()) {
+      lista.innerHTML = "<li>❔ Sem feedbacks cadastrados.</li>";
+      return;
+    }
+
+    snapshot.forEach(child => {
+      const data = child.val();
+      const acess = `${"♿".repeat(data.acess || 0)} (${data.acess || 0})`;
+      const mov = `${"🚶‍♂️".repeat(data.mov || 0)} (${data.mov || 0})`;
+      const recom = `${"⭐".repeat(data.recom || 0)} (${data.recom || 0})`;
+
+      const li = document.createElement("li");
+      li.textContent = `${acess} ${mov} ${recom}`;
+      lista.appendChild(li);
     });
+  }, {
+    onlyOnce: true
+  });
 }
 
+// Envio do Feedback
 document.getElementById("feedback-form").addEventListener("submit", function (e) {
   e.preventDefault();
   const acess = parseInt(document.getElementById("acess").value);
@@ -182,12 +200,13 @@ document.getElementById("feedback-form").addEventListener("submit", function (e)
   const feedbackRef = ref(database, "feedbacks/" + destino.replace(/\W+/g, "_"));
   push(feedbackRef, feedback);
 
-  alert("Feedback enviado! Obrigado 😊");
+  alert("✅ Feedback enviado! Obrigado 😊");
   mostrarFeedbacks(destino);
 });
 
+// Inicialização
 window.addEventListener("load", initMap);
 
-// 🛠️ Tornar funções disponíveis no escopo global
+// Tornar funções acessíveis no HTML
 window.init = init;
 window.calculateRoute = calculateRoute;
