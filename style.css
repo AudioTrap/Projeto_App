@@ -242,3 +242,78 @@ footer {
   padding: 0.6rem;
   border-radius: 8px;
 }
+
+/* Container do slider com os números alinhados */
+.slider-container {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+/* Faixa de números 1 a 5 alinhados horizontalmente */
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8px;
+  font-size: 0.9rem;
+  color: var(--secondary); /* cor azul escura */
+  margin-bottom: 6px;
+  user-select: none; /* evita seleção ao arrastar */
+}
+
+/* Cada número ocupa espaço igual e está centralizado */
+.slider-labels span {
+  flex: 1;
+  text-align: center;
+}
+
+/* Estilo padrão do input range (opcional melhorar visual) */
+input[type=range] {
+  width: 100%;
+  cursor: pointer;
+  -webkit-appearance: none;
+  background: var(--bg);
+}
+
+/* Estilo da trilha do range */
+input[type=range]::-webkit-slider-runnable-track {
+  height: 8px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 10px;
+}
+
+/* Estilo do thumb (bolinha do slider) */
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  background: var(--highlight);
+  border-radius: 50%;
+  margin-top: -7px; /* centraliza thumb verticalmente */
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+  background-color: var(--secondary);
+}
+
+/* Firefox */
+input[type=range]::-moz-range-track {
+  height: 8px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 10px;
+}
+
+input[type=range]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  background: var(--highlight);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+input[type=range]::-moz-range-thumb:hover {
+  background-color: var(--secondary);
+}
+

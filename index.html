@@ -25,7 +25,7 @@
 
   <section id="inicio" class="hero">
     <div class="content">
-      <img src="imagens/logo.png" alt="Logo do projeto" style="border-radius: 50%; width: 150px;" width="300"  />
+      <img src="imagens/logo.png" alt="Logo do projeto" style="border-radius: 50%; width: 150px;" />
       <h1>Bem-vindo ao AudioTrap</h1>
       <p>Segurança e mobilidade para pessoas com deficiência auditiva.</p>
       <div class="sound-wave"></div>
@@ -42,13 +42,12 @@
     <h2>Detector de Som</h2>
     <p>Ative abaixo para detectar sons do ambiente em tempo real.</p>
     <button onclick="init()">🎤 Ativar Detecção de Som</button>
-    <div id="audio-alert">Aguardando som...</div>
-    <img id="alert-image" alt="Alerta Sonoro" style="display:none;" />
+    <div id="audio-alert" class="audio-alert">Aguardando som...</div>
+    <img id="alert-image" alt="Alerta Sonoro" style="display:none; margin: 0 auto;" />
     <hr/>
-    <br> 
-    <br>
-    
-    <h2>Mapa Interativo</h2>
+    <br><br>
+
+    <h2 style="color:#2143A3">Mapa Interativo</h2>
     <input type="text" id="start" placeholder="Endereço de origem" />
     <input type="text" id="end" placeholder="Endereço de destino" />
     <button onclick="calculateRoute()">Ver rota e feedbacks</button>
@@ -61,37 +60,44 @@
     <ul id="lista-feedbacks"></ul>
 
     <form id="feedback-form">
-      <h3>Envie seu Feedback</h3>
-      <label>Acessibilidade: ♿</label>
-      <input type="range" id="acess" min="0" max="5">
-      <label>Movimentação: 🚶‍♂️</label>
-      <input type="range" id="mov" min="0" max="5">
-      <label>Recomendação: ⭐</label>
-      <input type="range" id="recom" min="0" max="5">
-      <button type="submit">Enviar</button>
+      <label for="acess">Acessibilidade: ♿</label>
+      <div class="slider-container">
+        <div class="slider-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+        <input type="range" id="acess" name="acess" min="1" max="5" value="3">
+      </div>
+
+      <label for="mov">Movimentação: 🚶‍♂️</label>
+      <div class="slider-container">
+        <div class="slider-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+        <input type="range" id="mov" name="mov" min="1" max="5" value="3">
+      </div>
+
+      <label for="recom">Recomendação: ⭐</label>
+      <div class="slider-container">
+        <div class="slider-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+        <input type="range" id="recom" name="recom" min="1" max="5" value="3">
+      </div>
+
+      <button type="submit">Enviar Feedback</button>
     </form>
-    <ul id="lista-feedbacks"></ul>
-    <hr/>
   </section>
 
-
-<section id="sonora" class="sonora-section">
-  <div class="sonora-title">
-    <img src="imagens/sonora.png" alt="Ícone da Sonora" class="sonora-icon">
-    <h2>Sonora</h2>
-  </div>
-  <p class="sonora-description">
-  A <strong>Sonora</strong> é a assistente virtual do AudioTrap, desenvolvida para facilitar a experiência do usuario com o site.</p>
-  <br>
-  <button class="sonora-button">🎙️ Falar com a Sonora</button>
-  <br>
-  <br>
-  <hr/>
-</section>
+  <section id="sonora" class="sonora-section">
+    <div class="sonora-title">
+      <img src="imagens/sonora.png" alt="Ícone da Sonora" class="sonora-icon">
+      <h2>Sonora</h2>
+    </div>
+    <p class="sonora-description">
+      A <strong>Sonora</strong> é a assistente virtual do AudioTrap, desenvolvida para facilitar a experiência do usuário com o site.
+    </p>
+    <br>
+    <button class="sonora-button">🎙️ Falar com a Sonora</button>
+    <br><br><hr/>
+  </section>
 
   <section id="equipe">
     <h2>Equipe</h2>
-    <p>Somos um grupo de pesquisadoras e estudantes apaixonadas por acessibilidade e inovação. Criamos o AudioTrap com foco em melhorar a mobilidade urbana para pessoas surdas ou com deficiência auditiva e tornar sua rotina msi segura.</p>
+    <p>Somos um grupo de pesquisadoras e estudantes apaixonadas por acessibilidade e inovação.</p>
     <img src="imagens/equipe.png" alt="Equipe no evento Desafio Liga Jovem" width="900" />
     <hr/>
   </section>
@@ -111,6 +117,7 @@
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands"></script>
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
+ 
