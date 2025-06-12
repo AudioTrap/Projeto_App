@@ -33,7 +33,6 @@ async function createModel() {
   await recognizer.ensureModelLoaded();
 }
 
-// Iniciar reconhecimento
 async function init() {
   try {
     await createModel();
@@ -82,10 +81,16 @@ async function init() {
             <div class="confidence">Nível do som: ${(confidence * 100).toFixed(1)}%</div>
           </div>
         `;
+
         if (alertImage) {
           alertImage.src = imageSrc;
           alertImage.style.display = "block";
         }
+
+        if ("vibrate" in navigator) {
+          navigator.vibrate([200, 100, 200]);
+        }
+
       } else {
         if (alertImage) alertImage.style.display = "none";
       }
@@ -107,7 +112,7 @@ let markers = [];
 function initMap() {
   map = L.map('mapa').setView([-10.2, -62.8], 13);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap'
+    attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 }
 
@@ -216,6 +221,22 @@ document.getElementById("feedback-form").addEventListener("submit", function (e)
     });
 });
 
-window.addEventListener("load", initMap);
+// Inicializações
+window.addEventListener("load", () => {
+  initMap();
+  const mapDiv = document.getElementById("mapa");
+  if (mapDiv) {
+    mapDiv.style.height = "300px";
+    mapDiv.style.width = "100%";
+  }
+});
+
 window.init = init;
 window.calculateRoute = calculateRoute;
+
+// Fecha o menu ao clicar em qualquer link
+document.querySelectorAll("nav a").forEach(link => {
+  link.addEventListener("click", () => {
+    document.querySelector("nav ul").classList.remove("open");
+  });
+});

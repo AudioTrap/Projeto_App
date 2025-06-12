@@ -8,13 +8,11 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
   <style>
     html {
-          scroll-padding-top: 80px;
-}
-; /* Para evitar que o header cubra os títulos */
+      scroll-padding-top: 80px;
     }
 
     header {
-      position: sticky;
+      position: relative;
       top: 0;
       background: white;
       z-index: 1000;
@@ -29,12 +27,30 @@
       flex-wrap: wrap;
     }
 
+    .logo {
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+
     nav ul {
       display: none;
       flex-direction: column;
       gap: 10px;
       padding: 10px;
-      background: #fff;
+      background-color: #2143A3;
+      border-radius: 10px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      padding: 8px 12px;
+      display: block;
+    }
+
+    nav ul li a:hover {
+      background-color: #1a3587;
+      border-radius: 8px;
     }
 
     nav ul.open {
@@ -46,7 +62,7 @@
       background: none;
       border: none;
       cursor: pointer;
-      display: inline-block;
+      color: #2143A3;
     }
 
     @media (min-width: 768px) {
@@ -57,7 +73,18 @@
       nav ul {
         display: flex !important;
         flex-direction: row;
-        background: none;
+        background-color: transparent;
+        padding: 0;
+      }
+
+      nav ul li a {
+        color: #2143A3;
+        font-weight: bold;
+      }
+
+      nav ul li a:hover {
+        background-color: #e0e0e0;
+        border-radius: 8px;
       }
     }
   </style>
@@ -72,6 +99,7 @@
         <li><a href="#inicio">Início</a></li>
         <li><a href="#como-funciona">Como Funciona</a></li>
         <li><a href="#detector">Detector</a></li>
+        <li><a href="#mapa">Mapa</a></li>
         <li><a href="#feedback">Feedback</a></li>
         <li><a href="#sonora">Sonora</a></li>
         <li><a href="#equipe">Equipe</a></li>
@@ -96,21 +124,30 @@
       <hr />
     </section>
 
-    <section id="detector">
-      <h2>Detector de Som</h2>
-      <p>Ative abaixo para detectar sons do ambiente em tempo real.</p>
-      <button onclick="init()">🎤 Ativar Detecção de Som</button>
-      <div id="audio-alert" class="audio-alert" style="text-align:center; font-size:1.5em; margin-top: 10px;">Aguardando som...</div>
-      <img id="alert-image" alt="Imagem do som detectado" style="display:none; margin: 10px auto; max-width: 120px;" loading="lazy" />
-      <hr />
+<section id="detector">
+  <h2>Detector de Som</h2>
+  <p>Ative abaixo para detectar sons do ambiente em tempo real.</p>
+  <button onclick="init()">🎤 Ativar Detecção de Som</button>
+  <div id="audio-alert" class="audio-alert" style="text-align:center; font-size:1.5em; margin-top: 10px;">Aguardando som...</div>
+  <img id="alert-image" alt="Imagem do som detectado" style="display:none; margin: 10px auto; max-width: 120px;" loading="lazy" />
+  <hr />
 
-      <h2 style="color:#2143A3;">Mapa Interativo</h2>
-      <input type="text" id="start" placeholder="Endereço de origem" />
-      <input type="text" id="end" placeholder="Endereço de destino" />
-      <button onclick="calculateRoute()">Ver rota e feedbacks</button>
-      <div id="mapa" style="height: 400px; margin-top: 20px;"></div>
-      <hr />
-    </section>
+  <h2 style="color:#2143A3;">Mapa Interativo</h2>
+  <!-- Campos de origem e destino com margem entre eles e botões -->
+  <input type="text" id="start" placeholder="Endereço de origem" style="display: block; margin-bottom: 1rem;" />
+  <input type="text" id="end" placeholder="Endereço de destino" style="display: block; margin-bottom: 1.5rem;" />
+  
+  <!-- Botão separado dos campos acima -->
+  <button onclick="calculateRoute()">Ver rota e feedbacks</button>
+
+  <!-- Nova seção Mapa Interativo -->
+  <section id="mapa-interativo-section" style="margin-top: 3rem;">
+    <div id="mapa" style="height: 400px; border-radius: 10px;"></div>
+  </section>
+
+  <hr />
+</section>
+
 
     <section id="feedback">
       <h2>Feedbacks do Destino</h2>
@@ -205,7 +242,7 @@
     document.addEventListener("DOMContentLoaded", () => {
       const toggleButton = document.getElementById('menu-toggle');
       const navLinks = document.querySelector('nav ul');
-
+    
       toggleButton.addEventListener('click', () => {
         navLinks.classList.toggle('open');
       });

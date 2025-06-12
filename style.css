@@ -15,6 +15,7 @@ body {
   scroll-behavior: smooth;
 }
 
+/* Header */
 header {
   background: var(--secondary);
   padding: 1rem 2rem;
@@ -31,6 +32,8 @@ nav ul {
   list-style: none;
   display: flex;
   gap: 1rem;
+  margin: 0; /* Evita espaçamento extra */
+  padding: 0;
 }
 
 nav a {
@@ -39,6 +42,7 @@ nav a {
   font-weight: bold;
 }
 
+/* Hero */
 .hero {
   background: linear-gradient(to right, var(--primary), var(--accent));
   color: white;
@@ -46,6 +50,7 @@ nav a {
   padding: 4rem 2rem;
 }
 
+/* Onda sonora horizontal */
 .sound-wave {
   width: 100%;
   height: 20px;
@@ -66,6 +71,7 @@ nav a {
   }
 }
 
+/* Seções */
 section {
   padding: 3rem 2rem;
 }
@@ -76,6 +82,7 @@ h2 {
   text-shadow: 1px 1px 1px rgba(0,0,0,0.05);
 }
 
+/* Botões */
 button {
   background: var(--highlight);
   color: white;
@@ -84,12 +91,16 @@ button {
   border-radius: 12px;
   font-size: 1rem;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
+button:hover,
+button:focus {
   background: var(--accent);
+  outline: none;
 }
 
+/* Mapa */
 #mapa {
   height: 300px;
   margin-top: 1rem;
@@ -97,6 +108,7 @@ button:hover {
   box-shadow: 0 0 10px #ccc;
 }
 
+/* Cartões de feedback */
 .feedback-cards {
   display: flex;
   flex-wrap: wrap;
@@ -105,13 +117,15 @@ button:hover {
 }
 
 .card {
-  flex: 1;
+  flex: 1 1 250px; /* mínimo para responsividade */
   padding: 1rem;
   border: 2px solid var(--primary);
   border-radius: 15px;
   background: #f9f9f9;
+  box-sizing: border-box;
 }
 
+/* Formulários */
 form {
   display: flex;
   flex-direction: column;
@@ -119,15 +133,17 @@ form {
   margin-top: 1rem;
 }
 
+/* Rodapé */
 footer {
   background: var(--secondary);
   color: white;
   text-align: center;
   padding: 1rem;
   margin-top: 2rem;
+  font-size: 0.9rem;
 }
 
-/* Onda sonora animada no centro */
+/* Onda sonora animada central */
 .wave-center {
   width: 100%;
   height: 40px;
@@ -157,14 +173,11 @@ footer {
 .bar:nth-child(5) { animation-delay: 0.8s; }
 
 @keyframes waveAnim {
-  0%, 100% {
-    height: 50px;
-  }
-  50% {
-    height: 100px;
-  }
+  0%, 100% { height: 50px; }
+  50% { height: 100px; }
 }
 
+/* Nome do som detectado */
 #nomeSomDetectado {
   font-size: 1.5rem;
   font-weight: bold;
@@ -175,9 +188,10 @@ footer {
   padding: 0.8rem;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  user-select: none;
 }
 
-/* Feedbacks */
+/* Lista de feedbacks */
 #lista-feedbacks {
   list-style: none;
   padding: 0;
@@ -192,7 +206,7 @@ footer {
   border-radius: 8px;
 }
 
-/* Sliders de feedback */
+/* Sliders */
 .slider-container {
   position: relative;
   margin-bottom: 2rem;
@@ -222,6 +236,9 @@ input[type=range] {
   cursor: pointer;
   -webkit-appearance: none;
   background: var(--bg);
+  border-radius: 10px;
+  height: 8px;
+  margin: 0;
 }
 
 input[type=range]::-webkit-slider-runnable-track {
@@ -230,25 +247,22 @@ input[type=range]::-webkit-slider-runnable-track {
   border-radius: 10px;
 }
 
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 22px;
-  height: 22px;
-  background: var(--highlight);
-  border-radius: 50%;
-  margin-top: -7px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-input[type=range]::-webkit-slider-thumb:hover {
-  background-color: var(--secondary);
-}
-
 input[type=range]::-moz-range-track {
   height: 8px;
   background: linear-gradient(90deg, var(--primary), var(--accent));
   border-radius: 10px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  width: 22px;
+  height: 22px;
+  background: var(--highlight);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border: none;
+  margin-top: -7px; /* Centraliza verticalmente no track */
+  -webkit-appearance: none;
 }
 
 input[type=range]::-moz-range-thumb {
@@ -258,8 +272,10 @@ input[type=range]::-moz-range-thumb {
   border-radius: 50%;
   cursor: pointer;
   transition: background-color 0.3s;
+  border: none;
 }
 
+input[type=range]::-webkit-slider-thumb:hover,
 input[type=range]::-moz-range-thumb:hover {
   background-color: var(--secondary);
 }
@@ -267,15 +283,14 @@ input[type=range]::-moz-range-thumb:hover {
 /* Seção sonora com ícone */
 .sonora-section {
   padding: 40px 20px;
-  background-color: #ffffff;
+  background-color: var(--bg);
   text-align: left;
   font-family: 'Segoe UI', sans-serif;
-  margin: 0;
 }
 
 .sonora-title {
   display: flex;
-  justify-content: left;
+  justify-content: flex-start;
   align-items: center;
   gap: 12px;
   margin-bottom: 5px;
@@ -283,7 +298,7 @@ input[type=range]::-moz-range-thumb:hover {
 
 .sonora-title h2 {
   font-size: 28px;
-  color: #2143A3;
+  color: var(--secondary);
   margin: 0;
 }
 
@@ -296,7 +311,7 @@ input[type=range]::-moz-range-thumb:hover {
 }
 
 .sonora-button {
-  background-color: #C94DA4;
+  background-color: var(--highlight);
   color: white;
   font-size: 16px;
   padding: 10px 20px;
@@ -306,13 +321,13 @@ input[type=range]::-moz-range-thumb:hover {
   transition: background-color 0.3s;
 }
 
-.sonora-button:hover {
-  background-color: #22A1A3;
+.sonora-button:hover,
+.sonora-button:focus {
+  background-color: var(--primary);
+  outline: none;
 }
 
-/* ... (suas variáveis, base e estilos existentes permanecem iguais) */
-
-/* RESPONSIVIDADE GERAL */
+/* Responsividade */
 @media (max-width: 768px) {
   header {
     flex-direction: column;
@@ -324,8 +339,8 @@ input[type=range]::-moz-range-thumb:hover {
     flex-direction: column;
     gap: 0.5rem;
     width: 100%;
-    padding: 0;
     margin-top: 1rem;
+    padding: 0;
   }
 
   nav a {
@@ -334,10 +349,7 @@ input[type=range]::-moz-range-thumb:hover {
     display: block;
   }
 
-  .hero {
-    padding: 2rem 1rem;
-  }
-
+  .hero,
   section {
     padding: 2rem 1rem;
   }
@@ -368,7 +380,6 @@ input[type=range]::-moz-range-thumb:hover {
   }
 
   .wave-container {
-    flex-wrap: nowrap;
     gap: 6px;
   }
 
@@ -401,7 +412,6 @@ input[type=range]::-moz-range-thumb:hover {
   }
 }
 
-/* iPhones muito pequenos ou dispositivos em modo paisagem */
 @media (max-width: 400px) {
   header, section, .hero {
     padding: 1rem;
@@ -421,6 +431,7 @@ input[type=range]::-moz-range-thumb:hover {
   }
 }
 
+/* Menu responsivo toggle */
 #menu-toggle {
   display: none;
   background: none;
@@ -441,11 +452,17 @@ input[type=range]::-moz-range-thumb:hover {
 
   nav ul {
     display: none;
-    flex-direction: column;
+    background-color: var(--secondary);
     width: 100%;
+    flex-direction: column;
+    padding: 1rem;
+    position: relative; /* mantido para stacking */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin: 0; /* zera margin para evitar espaçamento inesperado */
   }
 
   nav ul.open {
     display: flex;
+    margin-bottom: 1rem;
   }
 }
