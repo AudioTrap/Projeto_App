@@ -79,7 +79,7 @@ async function init() {
         output.innerHTML = `
           <div class="detected-sound">
             <div class="sound-name">${emoji} Som detectado: <strong>${nomeSom}</strong></div>
-            <div class="confidence">Confiança: ${(confidence * 100).toFixed(1)}%</div>
+            <div class="confidence">Nível do som: ${(confidence * 100).toFixed(1)}%</div>
           </div>
         `;
         if (alertImage) {

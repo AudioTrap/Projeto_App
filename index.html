@@ -6,11 +6,68 @@
   <title>AudioTrap - Acessibilidade Sonora</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <style>
+    html {
+          scroll-padding-top: 80px;
+}
+; /* Para evitar que o header cubra os títulos */
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 1000;
+      padding: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav ul {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px;
+      background: #fff;
+    }
+
+    nav ul.open {
+      display: flex;
+    }
+
+    #menu-toggle {
+      font-size: 1.5em;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    @media (min-width: 768px) {
+      #menu-toggle {
+        display: none;
+      }
+
+      nav ul {
+        display: flex !important;
+        flex-direction: row;
+        background: none;
+      }
+    }
+  </style>
 </head>
+
 <body>
   <header>
     <nav>
       <div class="logo">🎧 AudioTrap</div>
+      <button id="menu-toggle" aria-label="Abrir menu">☰</button>
       <ul>
         <li><a href="#inicio">Início</a></li>
         <li><a href="#como-funciona">Como Funciona</a></li>
@@ -120,7 +177,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands"></script>
 
-  <!-- Firebase (modular) -->
+  <!-- Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-analytics.js";
@@ -142,5 +199,17 @@
 
   <!-- Script principal -->
   <script type="module" src="script.js"></script>
+
+  <!-- Menu toggle script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const toggleButton = document.getElementById('menu-toggle');
+      const navLinks = document.querySelector('nav ul');
+
+      toggleButton.addEventListener('click', () => {
+        navLinks.classList.toggle('open');
+      });
+    });
+  </script>
 </body>
 </html>
