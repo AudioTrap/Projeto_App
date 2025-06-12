@@ -1,6 +1,5 @@
 // Firebase SDKs
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-analytics.js";
 import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-database.js";
 
 // Firebase Config
@@ -11,23 +10,26 @@ const firebaseConfig = {
   projectId: "audiotrap-23",
   storageBucket: "audiotrap-23.appspot.com",
   messagingSenderId: "49187410477",
-  appId: "1:49187410477:web:98bc5f8f90025e56775ea4",
-  measurementId: "G-7J8EHXJSPT"
+  appId: "1:49187410477:web:98bc5f8f90025e56775ea4"
 };
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const analytics = getAnalytics(app);
-const database = getDatabase(app, firebaseConfig.databaseURL);
+const database = getDatabase(app);
 
 // Reconhecimento de som
 let recognizer;
 const modelURL = "https://teachablemachine.withgoogle.com/models/I9hL16mkw/";
 
 async function createModel() {
-  const script = document.createElement('script');
-  script.src = "https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands";
-  document.head.appendChild(script);
-  await new Promise(resolve => script.onload = resolve);
+  if (!window.speechCommands) {
+    await new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands";
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
 
   recognizer = speechCommands.create("BROWSER_FFT", undefined, modelURL + "model.json", modelURL + "metadata.json");
   await recognizer.ensureModelLoaded();
@@ -41,46 +43,49 @@ async function init() {
     recognizer.listen(result => {
       const scores = result.scores;
       const index = scores.indexOf(Math.max(...scores));
-      const label = classLabels[index];
+      const label = classLabels[index] || "Desconhecido";
       const confidence = scores[index];
       const output = document.getElementById("audio-alert");
       const alertImage = document.getElementById("alert-image");
 
-      output.innerText = "Aguardando som...";
+      if (output) output.innerText = "Aguardando som...";
 
       if (confidence > 0.75) {
         let emoji = "🔊";
         let imageSrc = "imagens/sirene.png";
         let nomeSom = label;
 
-        if (label.toLowerCase().includes("cachorro")) {
+        const l = label.toLowerCase();
+        if (l.includes("cachorro")) {
           emoji = "🐶";
           imageSrc = "imagens/cachorro.png";
           nomeSom = "Latido";
-        } else if (label.toLowerCase().includes("buzina")) {
+        } else if (l.includes("buzina")) {
           emoji = "📢";
           imageSrc = "imagens/buzina.png";
           nomeSom = "Buzina";
-        } else if (label.toLowerCase().includes("palmas")) {
+        } else if (l.includes("palmas")) {
           emoji = "👏";
           imageSrc = "imagens/palmas.png";
           nomeSom = "Palmas";
-        } else if (label.toLowerCase().includes("estalo")) {
+        } else if (l.includes("estalo")) {
           emoji = "⚡";
           imageSrc = "imagens/estalo.png";
           nomeSom = "Estalo";
-        } else if (label.toLowerCase().includes("alarme") || label.toLowerCase().includes("sirene")) {
+        } else if (l.includes("alarme") || l.includes("sirene")) {
           emoji = "🚨";
           imageSrc = "imagens/sirene.png";
           nomeSom = "Alarme de Incêndio";
         }
 
-        output.innerHTML = `
-          <div class="detected-sound">
-            <div class="sound-name">${emoji} Som detectado: <strong>${nomeSom}</strong></div>
-            <div class="confidence">Nível do som: ${(confidence * 100).toFixed(1)}%</div>
-          </div>
-        `;
+        if (output) {
+          output.innerHTML = `
+            <div class="detected-sound">
+              <div class="sound-name">${emoji} Som detectado: <strong>${nomeSom}</strong></div>
+              <div class="confidence">Nível do som: ${(confidence * 100).toFixed(1)}%</div>
+            </div>
+          `;
+        }
 
         if (alertImage) {
           alertImage.src = imageSrc;
@@ -94,12 +99,14 @@ async function init() {
       } else {
         if (alertImage) alertImage.style.display = "none";
       }
+
     }, {
       includeSpectrogram: true,
       probabilityThreshold: 0.75,
       invokeCallbackOnNoiseAndUnknown: true,
       overlapFactor: 0.5,
     });
+
   } catch (err) {
     console.error("Erro ao iniciar reconhecimento:", err);
   }
@@ -111,6 +118,7 @@ let markers = [];
 
 function initMap() {
   map = L.map('mapa').setView([-10.2, -62.8], 13);
+  
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
@@ -229,9 +237,9 @@ window.addEventListener("load", () => {
     mapDiv.style.height = "300px";
     mapDiv.style.width = "100%";
   }
+  init(); // Inicializa o reconhecimento de som após carregar tudo
 });
 
-window.init = init;
 window.calculateRoute = calculateRoute;
 
 // Fecha o menu ao clicar em qualquer link
