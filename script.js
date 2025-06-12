@@ -21,7 +21,7 @@ const database = getDatabase(app, firebaseConfig.databaseURL);
 
 // Reconhecimento de som
 let recognizer;
-const modelURL = "https://teachablemachine.withgoogle.com/models/I9hL16mkw/";
+const modelURL = "https://teachablemachine.withgoogle.com/models/U_mjo1IdA/";
 
 async function createModel() {
   const script = document.createElement('script');
@@ -54,26 +54,30 @@ async function init() {
         let imageSrc = "imagens/sirene.png";
         let nomeSom = label;
 
-        if (label.toLowerCase().includes("cachorro")) {
+        if (label.toLowerCase().includes("Cachorro")) {
           emoji = "🐶";
           imageSrc = "imagens/cachorro.png";
-          nomeSom = "Latido";
-        } else if (label.toLowerCase().includes("buzina")) {
+          nomeSom = "Cachorro latindo";
+        } else if (label.toLowerCase().includes("Buzina")) {
           emoji = "📢";
           imageSrc = "imagens/buzina.png";
           nomeSom = "Buzina";
-        } else if (label.toLowerCase().includes("palmas")) {
+        } else if (label.toLowerCase().includes("Palmas")) {
           emoji = "👏";
           imageSrc = "imagens/palmas.png";
           nomeSom = "Palmas";
-        } else if (label.toLowerCase().includes("estalo")) {
+        } else if (label.toLowerCase().includes("Estalo")) {
           emoji = "⚡";
           imageSrc = "imagens/estalo.png";
           nomeSom = "Estalo";
-        } else if (label.toLowerCase().includes("alarme") || label.toLowerCase().includes("sirene")) {
+        } else if (label.toLowerCase().includes("Alarme de Incêndio")) {
           emoji = "🚨";
           imageSrc = "imagens/sirene.png";
-          nomeSom = "Alarme de Incêndio";
+          nomeSom = "Alarme de incendio";
+        } else if (label.toLowerCase().includes("Pessoas Conversando")) {
+          emoji = "🗣️";
+          imageSrc = "imagens/conversa.png";
+          nomeSom = "Pessoas conversando";
         }
 
         output.innerHTML = `
