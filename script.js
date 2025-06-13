@@ -52,7 +52,8 @@ async function init() {
       if (confidence > 0.75) {
         let emoji = "🔊";
         let imageSrc = "imagens/sirene.png";
-        let nomeSom = label;
+        let nomeSom = label.toLowerCase(); // 🔁 ALTERADO: padroniza para minúsculo
+        const labelLower = label.toLowerCase(); // 🔁 NOVO: variável auxiliar
 
         if (label.toLowerCase().includes("Cachorro")) {
           emoji = "🐶";
@@ -90,15 +91,22 @@ async function init() {
           alertImage.src = imageSrc;
           alertImage.style.display = "block";
         }
+
+        if ("vibrate" in navigator) {
+          navigator.vibrate([200, 100, 200]);
+        }
+
       } else {
         if (alertImage) alertImage.style.display = "none";
       }
+
     }, {
       includeSpectrogram: true,
       probabilityThreshold: 0.75,
       invokeCallbackOnNoiseAndUnknown: true,
       overlapFactor: 0.5,
     });
+
   } catch (err) {
     console.error("Erro ao iniciar reconhecimento:", err);
   }

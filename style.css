@@ -236,6 +236,7 @@ input[type=range] {
   cursor: pointer;
   -webkit-appearance: none;
   background: var(--bg);
+  appearance: none;
   border-radius: 10px;
   height: 8px;
   margin: 0;
