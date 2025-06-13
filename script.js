@@ -51,7 +51,7 @@ async function init() {
 
       if (confidence > 0.75) {
         let emoji = "🔊";
-        let imageSrc = "imagens/sirene.png";
+        let imageSrc = "imagens/ondas.jpg";
         let nomeSom = label.toLowerCase(); // 🔁 ALTERADO: padroniza para minúsculo
         const labelLower = label.toLowerCase(); // 🔁 NOVO: variável auxiliar
 
