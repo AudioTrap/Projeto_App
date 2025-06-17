@@ -175,6 +175,7 @@ async function calculateRoute() {
   mostrarFeedbacks(destino);
 }
 
+
 // Feedbacks
 function mostrarFeedbacks(destino) {
   const lista = document.getElementById("lista-feedbacks");
