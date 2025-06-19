@@ -90,44 +90,6 @@
         border-radius: 8px;
       }
     }
-
-    /* Estilo para a nova seção de intérprete */
-    #interprete {
-      background-color: #f9f9f9;
-      padding: 1.5rem;
-      border-radius: 10px;
-      margin: 2rem 0;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-
-    #interprete h2 {
-      color: #2143A3;
-      margin-bottom: 0.5rem;
-    }
-
-    #interprete p {
-      font-size: 1.1em;
-      margin-bottom: 1rem;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    #interprete button {
-      background-color: #2143A3;
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      font-size: 1.1em;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    #interprete button:hover {
-      background-color: #1a3587;
-    }
   </style>
 </head>
 
@@ -153,7 +115,7 @@
   <main>
     <section id="inicio" class="hero">
       <div class="content">
-        <img src="imagens/logo.png" alt="Logo do AudioTrap" style="border-radius: 50%; width: 150px;" loading="lazy" />
+        <img src="imagens/logo.png" alt="Logo do AudioTrap" style="border-radius: 50%; width: 200px;" loading="lazy" />
         <h1>Bem-vindo ao AudioTrap</h1>
         <p>Promovendo Inclusão Através da Tecnologia!</p>
         <div class="sound-wave"></div>
@@ -241,26 +203,23 @@
 </section>
 
 
-    <!-- Nova seção de intérprete simulado -->
 <section id="interprete" class="interprete-section">
   <div class="interprete-title">
-    <h2 style="color: #2143A3;">
+    <h2>
       <strong>Intérprete</strong>
       <span style="color: red; font-size: 0.9rem; margin-left: 10px;">– em desenvolvimento</span>
     </h2>
-    <p style="text-align: left;">
-      A função <strong>Intérprete</strong> conecta você com intérpretes de Libras por videochamada, oferecendo suporte em situações cotidianas como atendimento em serviços, dúvidas e emergências.
-    </p>
-    <button class="interprete-button" onclick="window.open('https://meet.google.com/', '_blank')">
-      📞 Acessar chamada com intérprete
-    </button>
   </div>
+
+  <p class="interprete-description">
+    A função <strong>Intérprete</strong> conecta você com intérpretes de Libras por videochamada, oferecendo suporte em situações cotidianas como atendimento em serviços, dúvidas e emergências.
+  </p>
+
+  <button class="interprete-button" onclick="window.open('https://meet.google.com/', '_blank')">
+    📱 Acessar chamada com intérprete
+  </button>
+  <hr />
 </section>
-
-
-
-
-
 
 
 
