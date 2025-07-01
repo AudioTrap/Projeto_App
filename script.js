@@ -236,3 +236,53 @@ window.calculateRoute = calculateRoute;
 
 //CHAT SONORA//
 
+function abrirChatSonora() {
+  const section = document.getElementById("sonora");
+
+  if (!document.getElementById("chat-sonora")) {
+    const container = document.createElement("div");
+    container.id = "chat-sonora";
+    container.style = `
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      padding: 16px;
+      background: #f9f9f9;
+    `;
+
+    container.innerHTML = `
+      <div id="chat-log" style="height: 200px; overflow-y: auto; margin-bottom: 12px; border: 1px solid #ddd; padding: 10px; border-radius: 8px;"></div>
+      <input type="text" id="chat-input" placeholder="Digite sua pergunta..." style="width: 80%; padding: 10px; border-radius: 8px; border: 1px solid #ccc;" />
+      <button onclick="enviarParaSonora()" style="padding: 10px 16px; border-radius: 8px; background-color: #2143A3; color: white; border: none; margin-left: 10px;">Enviar</button>
+    `;
+
+    section.appendChild(container);
+  }
+}
+
+function enviarParaSonora() {
+  const input = document.getElementById("chat-input");
+  const log = document.getElementById("chat-log");
+  const pergunta = input.value.trim();
+
+  if (!pergunta) return;
+
+  log.innerHTML += `<div><strong>Você:</strong> ${pergunta}</div>`;
+  input.value = "";
+
+  fetch("https://fuzzy-space-palm-tree-wrxw6x96r4wgf9vp7-3000.app.github.dev/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ pergunta })
+  })
+    .then(res => res.json())
+    .then(data => {
+      log.innerHTML += `<div><strong>Sonora:</strong> ${data.resposta}</div>`;
+      log.scrollTop = log.scrollHeight;
+    })
+    .catch(() => {
+      log.innerHTML += `<div><strong>Sonora:</strong> Erro ao responder. Tente novamente.</div>`;
+    });
+}
+
+
