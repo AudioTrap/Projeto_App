@@ -3,8 +3,8 @@ import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.9.
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-analytics.js";
 import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-database.js";
 
-// URL do backend da assistente Sonora
-const BACKEND_URL = "https://verbose-space-doodle-jj9x6946jgxg2j5xv-3000.app.github.dev";
+// URL local do LM Studio
+const BACKEND_URL = "http://localhost:1234/v1/chat/completions";
 
 // Firebase Config
 const firebaseConfig = {
@@ -259,33 +259,22 @@ window.enviarPerguntaSonora = async function () {
   input.disabled = true;
 
   try {
-    const resposta = await fetch(`${BACKEND_URL}/responder`, {
+    const resposta = await fetch(BACKEND_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pergunta })
+      body: JSON.stringify({
+        model: "local-model", // Substitua pelo nome do modelo carregado no LM Studio se for diferente
+        messages: [{ role: "user", content: pergunta }]
+      })
     });
 
-    if (!resposta.ok) {
-      mensagens.innerHTML += `<div><strong>Sonora:</strong> Erro do servidor: ${resposta.status} ${resposta.statusText}</div>`;
-      input.disabled = false;
-      input.value = "";
-      input.focus();
-      return;
-    }
-
     const data = await resposta.json();
-
-    if (data.resposta) {
-      mensagens.innerHTML += `<div><strong>Sonora:</strong> ${data.resposta}</div>`;
-    } else if (data.erro) {
-      mensagens.innerHTML += `<div><strong>Sonora:</strong> Erro: ${data.erro}</div>`;
-    } else {
-      mensagens.innerHTML += `<div><strong>Sonora:</strong> Resposta inesperada do servidor.</div>`;
-    }
+    const mensagemIA = data.choices?.[0]?.message?.content || "(sem resposta)";
+    mensagens.innerHTML += `<div><strong>Sonora:</strong> ${mensagemIA}</div>`;
 
   } catch (err) {
     mensagens.innerHTML += `<div><strong>Sonora:</strong> Erro ao responder.</div>`;
-    console.error("Erro na comunicação com backend:", err);
+    console.error("Erro na comunicação com LM Studio:", err);
   }
 
   input.disabled = false;
