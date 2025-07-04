@@ -5,10 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AudioTrap - Acessibilidade Sonora</title>
   <!-- Leaflet Routing Machine -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
-  <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.min.js"></script>
+ <!-- Leaflet primeiro -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+<!-- Depois Routing Machine -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
+
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
   <style>
     html {
       scroll-padding-top: 80px;
@@ -183,12 +188,10 @@
       <hr />
     </section>
 
-    <section id="sonora" class="sonora-section">
+<section id="sonora" class="sonora-section">
   <div class="sonora-title">
     <img src="imagens/sonoraFbranco.jpg" alt="Ícone da assistente Sonora" class="sonora-icon" loading="lazy" />
-    <h2 style=" color: #2143A3;">
-        <strong>Sonora</strong> 
-    </h2>
+    <h2 style=" color: #2143A3;"><strong>Sonora</strong></h2>
   </div>
 
   <p class="sonora-description">
@@ -196,8 +199,7 @@
   </p>
 
   <button class="sonora-button" onclick="abrirChatSonora()">🎙️ Falar com a Sonora</button>
-<hr>
-
+  <hr>
 </section>
 
 
@@ -329,6 +331,14 @@
   // Atualiza os rótulos ao carregar a página
   updateLabels();
 </script>
+
+<div id="sonora-chat" style="display: none; position: fixed; bottom: 100px; right: 20px; width: 300px; background: white; border: 2px solid #2143A3; border-radius: 12px; padding: 15px; z-index: 9999;">
+  <div style="font-weight: bold; color: #2143A3;">Assistente Sonora</div>
+  <div id="mensagens-sonora" style="max-height: 200px; overflow-y: auto; margin: 10px 0;"></div>
+  <input id="input-sonora" type="text" placeholder="Digite sua pergunta..." style="width: 100%; padding: 8px;" />
+  <button onclick="enviarPerguntaSonora()" style="width: 100%; background: #7D31B0; color: white; padding: 8px; margin-top: 5px;">Enviar</button>
+</div>
+
 
 </body>
 </html>

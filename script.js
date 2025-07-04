@@ -3,6 +3,9 @@ import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.9.
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-analytics.js";
 import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-database.js";
 
+// URL do backend da assistente Sonora
+const BACKEND_URL = "https://verbose-space-doodle-jj9x6946jgxg2j5xv-3000.app.github.dev";
+
 // Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyBrQ8qo5eZdkdukmLYvIilI6kv51Z9p8Gg",
@@ -236,53 +239,58 @@ window.calculateRoute = calculateRoute;
 
 //CHAT SONORA//
 
-function abrirChatSonora() {
-  const section = document.getElementById("sonora");
-
-  if (!document.getElementById("chat-sonora")) {
-    const container = document.createElement("div");
-    container.id = "chat-sonora";
-    container.style = `
-      margin-top: 20px;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      padding: 16px;
-      background: #f9f9f9;
-    `;
-
-    container.innerHTML = `
-      <div id="chat-log" style="height: 200px; overflow-y: auto; margin-bottom: 12px; border: 1px solid #ddd; padding: 10px; border-radius: 8px;"></div>
-      <input type="text" id="chat-input" placeholder="Digite sua pergunta..." style="width: 80%; padding: 10px; border-radius: 8px; border: 1px solid #ccc;" />
-      <button onclick="enviarParaSonora()" style="padding: 10px 16px; border-radius: 8px; background-color: #2143A3; color: white; border: none; margin-left: 10px;">Enviar</button>
-    `;
-
-    section.appendChild(container);
+window.abrirChatSonora = function () {
+  const chat = document.getElementById("sonora-chat");
+  if (!chat) {
+    console.error("Elemento #sonora-chat não encontrado");
+    return;
   }
-}
+  chat.style.display = (chat.style.display === "none" || chat.style.display === "") ? "block" : "none";
+};
 
-function enviarParaSonora() {
-  const input = document.getElementById("chat-input");
-  const log = document.getElementById("chat-log");
+window.enviarPerguntaSonora = async function () {
+  const input = document.getElementById("input-sonora");
+  const mensagens = document.getElementById("mensagens-sonora");
   const pergunta = input.value.trim();
-
   if (!pergunta) return;
 
-  log.innerHTML += `<div><strong>Você:</strong> ${pergunta}</div>`;
-  input.value = "";
+  mensagens.innerHTML += `<div><strong>Você:</strong> ${pergunta}</div>`;
+  input.value = "Carregando...";
+  input.disabled = true;
 
-  fetch("https://fuzzy-space-palm-tree-wrxw6x96r4wgf9vp7-3000.app.github.dev/", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ pergunta })
-  })
-    .then(res => res.json())
-    .then(data => {
-      log.innerHTML += `<div><strong>Sonora:</strong> ${data.resposta}</div>`;
-      log.scrollTop = log.scrollHeight;
-    })
-    .catch(() => {
-      log.innerHTML += `<div><strong>Sonora:</strong> Erro ao responder. Tente novamente.</div>`;
+  try {
+    const resposta = await fetch(`${BACKEND_URL}/responder`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pergunta })
     });
-}
+
+    if (!resposta.ok) {
+      mensagens.innerHTML += `<div><strong>Sonora:</strong> Erro do servidor: ${resposta.status} ${resposta.statusText}</div>`;
+      input.disabled = false;
+      input.value = "";
+      input.focus();
+      return;
+    }
+
+    const data = await resposta.json();
+
+    if (data.resposta) {
+      mensagens.innerHTML += `<div><strong>Sonora:</strong> ${data.resposta}</div>`;
+    } else if (data.erro) {
+      mensagens.innerHTML += `<div><strong>Sonora:</strong> Erro: ${data.erro}</div>`;
+    } else {
+      mensagens.innerHTML += `<div><strong>Sonora:</strong> Resposta inesperada do servidor.</div>`;
+    }
+
+  } catch (err) {
+    mensagens.innerHTML += `<div><strong>Sonora:</strong> Erro ao responder.</div>`;
+    console.error("Erro na comunicação com backend:", err);
+  }
+
+  input.disabled = false;
+  input.value = "";
+  input.focus();
+};
 
 
