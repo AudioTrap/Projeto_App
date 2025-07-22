@@ -3,10 +3,7 @@ import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.9.
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-analytics.js";
 import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-database.js";
 
-// URL local do LM Studio
-const BACKEND_URL = "http://localhost:1234/v1/chat/completions";
-
-// Firebase Config
+// Configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBrQ8qo5eZdkdukmLYvIilI6kv51Z9p8Gg",
   authDomain: "audiotrap-23.firebaseapp.com",
@@ -20,7 +17,7 @@ const firebaseConfig = {
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const analytics = getAnalytics(app);
-const database = getDatabase(app, firebaseConfig.databaseURL);
+const database = getDatabase(app);
 
 // Reconhecimento de som
 let recognizer;
@@ -36,7 +33,6 @@ async function createModel() {
   await recognizer.ensureModelLoaded();
 }
 
-// Iniciar reconhecimento
 async function init() {
   try {
     await createModel();
@@ -55,30 +51,29 @@ async function init() {
       if (confidence > 0.75) {
         let emoji = "🔊";
         let imageSrc = "imagens/ondas.jpg";
-        let nomeSom = label.toLowerCase(); // 🔁 ALTERADO: padroniza para minúsculo
-        const labelLower = label.toLowerCase(); // 🔁 NOVO: variável auxiliar
+        let nomeSom = label.toLowerCase();
 
-        if (label.toLowerCase().includes("Cachorro")) {
+        if (label.toLowerCase().includes("cachorro")) {
           emoji = "🐶";
-          imageSrc = "imagens/cachorro.png";
+          imageSrc = "imagens/cachorro-latindo.png";
           nomeSom = "Cachorro latindo";
-        } else if (label.toLowerCase().includes("Buzina")) {
-          emoji = "📢";
+        } else if (label.toLowerCase().includes("buzina")) {
+          emoji = "🚗";
           imageSrc = "imagens/buzina.png";
           nomeSom = "Buzina";
-        } else if (label.toLowerCase().includes("Palmas")) {
+        } else if (label.toLowerCase().includes("palmas")) {
           emoji = "👏";
           imageSrc = "imagens/palmas.png";
           nomeSom = "Palmas";
-        } else if (label.toLowerCase().includes("Estalo")) {
-          emoji = "⚡";
-          imageSrc = "imagens/estalo.png";
+        } else if (label.toLowerCase().includes("estalo")) {
+          emoji = "🤞";
+          imageSrc = "imagens/estalos.png";
           nomeSom = "Estalo";
-        } else if (label.toLowerCase().includes("Alarme de Incêndio")) {
+        } else if (label.toLowerCase().includes("alarme de incêndio")) {
           emoji = "🚨";
           imageSrc = "imagens/sirene.png";
-          nomeSom = "Alarme de incendio";
-        } else if (label.toLowerCase().includes("Pessoas Conversando")) {
+          nomeSom = "Alarme de incêndio";
+        } else if (label.toLowerCase().includes("pessoas conversando")) {
           emoji = "🗣️";
           imageSrc = "imagens/conversa.png";
           nomeSom = "Pessoas conversando";
@@ -90,6 +85,7 @@ async function init() {
             <div class="confidence">Nível do som: ${(confidence * 100).toFixed(1)}%</div>
           </div>
         `;
+
         if (alertImage) {
           alertImage.src = imageSrc;
           alertImage.style.display = "block";
@@ -178,7 +174,6 @@ async function calculateRoute() {
   mostrarFeedbacks(destino);
 }
 
-
 // Feedbacks
 function mostrarFeedbacks(destino) {
   const lista = document.getElementById("lista-feedbacks");
@@ -232,54 +227,34 @@ document.getElementById("feedback-form").addEventListener("submit", function (e)
     });
 });
 
-window.addEventListener("load", initMap);
-window.init = init;
-window.calculateRoute = calculateRoute;
-
-
-//CHAT SONORA//
+// Sonora - Assistente Virtual com Menu de Perguntas
+const faqSonora = [
+  { pergunta: "O que é o AudioTrap?", resposta: "O AudioTrap é uma solução de acessibilidade sonora que ajuda pessoas surdas a identificarem sons do ambiente e obterem informações sobre segurança e mobilidade." },
+  { pergunta: "Como funciona o detector de som?", resposta: "O detector capta sons importantes, como sirenes, buzinas e latidos, e exibe alertas visuais e vibratórios." },
+  { pergunta: "Para que serve o mapa interativo?", resposta: "O mapa mostra rotas e locais com feedbacks sobre acessibilidade, segurança e movimentação." },
+  { pergunta: "Como enviar feedback?", resposta: "Você pode avaliar locais com emojis de acessibilidade, movimentação e recomendação." },
+  { pergunta: "Quem criou o AudioTrap?", resposta: "O AudioTrap foi desenvolvido por pesquisadoras e estudantes do IFRO Campus Porto Velho Calama." },
+];
 
 window.abrirChatSonora = function () {
   const chat = document.getElementById("sonora-chat");
-  if (!chat) {
-    console.error("Elemento #sonora-chat não encontrado");
-    return;
-  }
-  chat.style.display = (chat.style.display === "none" || chat.style.display === "") ? "block" : "none";
-};
-
-window.enviarPerguntaSonora = async function () {
-  const input = document.getElementById("input-sonora");
   const mensagens = document.getElementById("mensagens-sonora");
-  const pergunta = input.value.trim();
-  if (!pergunta) return;
+  chat.style.display = "block";
+  mensagens.innerHTML = "<strong>Sonora:</strong> Olá! Escolha uma das opções abaixo para saber mais:<br>";
 
-  mensagens.innerHTML += `<div><strong>Você:</strong> ${pergunta}</div>`;
-  input.value = "Carregando...";
-  input.disabled = true;
+  faqSonora.forEach((item, index) => {
+    mensagens.innerHTML += `<button onclick="responderFaq(${index})" style="margin:5px; padding:8px;">${item.pergunta}</button><br>`;
+  });
 
-  try {
-    const resposta = await fetch(BACKEND_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "local-model", // Substitua pelo nome do modelo carregado no LM Studio se for diferente
-        messages: [{ role: "user", content: pergunta }]
-      })
-    });
-
-    const data = await resposta.json();
-    const mensagemIA = data.choices?.[0]?.message?.content || "(sem resposta)";
-    mensagens.innerHTML += `<div><strong>Sonora:</strong> ${mensagemIA}</div>`;
-
-  } catch (err) {
-    mensagens.innerHTML += `<div><strong>Sonora:</strong> Erro ao responder.</div>`;
-    console.error("Erro na comunicação com LM Studio:", err);
-  }
-
-  input.disabled = false;
-  input.value = "";
-  input.focus();
+  mensagens.innerHTML += `<br>Se a sua dúvida não estiver aqui, entre em contato pelo e-mail <strong>audiotrapp4g@gmail.com</strong>`;
 };
 
+window.responderFaq = function (index) {
+  const mensagens = document.getElementById("mensagens-sonora");
+  mensagens.innerHTML += `<div style="margin-top:10px;"><strong>Você:</strong> ${faqSonora[index].pergunta}</div>`;
+  mensagens.innerHTML += `<div><strong>Sonora:</strong> ${faqSonora[index].resposta}</div>`;
+};
 
+window.addEventListener("load", initMap);
+window.init = init;
+window.calculateRoute = calculateRoute;

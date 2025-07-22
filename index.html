@@ -188,19 +188,123 @@
       <hr />
     </section>
 
-<section id="sonora" class="sonora-section">
+  <!-- Botão para abrir o chat -->
+  <section id="sonora" class="sonora-section">
   <div class="sonora-title">
     <img src="imagens/sonoraFbranco.jpg" alt="Ícone da assistente Sonora" class="sonora-icon" loading="lazy" />
-    <h2 style=" color: #2143A3;"><strong>Sonora</strong></h2>
+    <h2 style="color: #2143A3;"><strong>Sonora</strong></h2>
   </div>
 
   <p class="sonora-description">
-    A <strong>Sonora</strong> é a assistente virtual do AudioTrap, desenvolvida para facilitar a experiência do usuário com o site.
+    A <strong>Sonora</strong> é a assistente virtual do AudioTrap. Clique no botão abaixo para tirar dúvidas sobre o projeto.
   </p>
 
-  <button class="sonora-button" onclick="abrirChatSonora()">🎙️ Falar com a Sonora</button>
+  <button class="sonora-button" onclick="toggleFaqSonora()">🎙️ Falar com a Sonora</button>
+
+  <div id="faq-sonora" style="display: none; margin-top: 15px;">
+    <button class="faq-button">O que é o AudioTrap?</button>
+    <div class="faq-content">
+      <p>O AudioTrap é uma solução de acessibilidade sonora que ajuda pessoas surdas a identificarem sons do ambiente e obterem informações sobre segurança e mobilidade em tempo real.</p>
+    </div>
+
+    <button class="faq-button">Como surgiu o AudioTrap?</button>
+    <div class="faq-content">
+      <p>O AudioTrap surgiu após um quase acidente no IFRO Campus Porto Velho Calama, quando um aluno surdo de Eletrotécnica não percebeu o barulho de uma parafusadeira ligada próximo a ele. A situação só não foi pior porque o professor interveio a tempo. Esse episódio evidenciou a necessidade de criar uma solução que ajudasse pessoas surdas a identificar sons de risco no ambiente.
+</p>
+    </div>
+
+    <button class="faq-button">Como funciona o detector de som?</button>
+    <div class="faq-content">
+      <p>O detector de som do AudioTrap capta sons do ambiente, como sirenes, buzinas, latidos e alarmes. Quando detecta algum som importante, ele exibe alertas visuais e vibração no celular.</p>
+    </div>
+
+    <button class="faq-button">Como funciona o mapa interativo?</button>
+    <div class="faq-content">
+      <p>O mapa do AudioTrap permite ver rotas e locais com feedbacks sobre acessibilidade, segurança e movimentação. Você escolhe o destino e vê informações úteis antes de sair.</p>
+    </div>
+
+    <button class="faq-button">Como enviar feedback?</button>
+    <div class="faq-content">
+      <p>Você pode avaliar locais usando emojis de acessibilidade, movimentação e recomendação. Isso ajuda outras pessoas a escolherem caminhos mais seguros e acessíveis.</p>
+    </div>
+
+    <button class="faq-button">Quem é a Sonora?</button>
+    <div class="faq-content">
+      <p>A Sonora é a assistente virtual do AudioTrap. Ela ajuda você a tirar dúvidas sobre as funções do aplicativo de forma rápida e simples.</p>
+    </div>
+
+    <button class="faq-button">Como chamar um intérprete de Libras?</button>
+    <div class="faq-content">
+      <p>O AudioTrap oferece um botão para abrir uma videochamada com intérpretes de Libras, facilitando o atendimento em situações do dia a dia.</p>
+    </div>
+
+    <button class="faq-button">Quem criou o AudioTrap?</button>
+    <div class="faq-content">
+      <p>O AudioTrap foi desenvolvido por pesquisadoras e estudantes do IFRO Campus Porto Velho Calama, com apoio da Capes e do Desafio Liga Jovem.</p>
+    </div>
+
+    <button class="faq-button">Como entrar em contato?</button>
+    <div class="faq-content">
+      <p>Você pode entrar em contato pelo email <a href="mailto:audiotrapp4g@gmail.com">audiotrapp4g@gmail.com</a></p> ou pelo Instagram <a href="https://instagram.com/audiotrap.ro" target="_blank">@audiotrap.ro</a>.</p>
+    </div>
+
+    <p style="margin-top:20px; font-style:italic; color:#000000;">
+      Se sua dúvida não estiver listada, entre em contato pelo e-mail <a href="mailto:audiotrapp4g@gmail.com">audiotrapp4g@gmail.com</a> que ficaremos felizes em lhe ajudar!</p>
+  </div>
+
   <hr>
 </section>
+
+<!-- Estilo FAQ -->
+<style>
+  .faq-button {
+    width: 100%;
+    background-color: #2143A3;
+    color: white;
+    padding: 12px;
+    margin: 5px 0;
+    text-align: left;
+    border: none;
+    outline: none;
+    font-size: 1em;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+  }
+
+  .faq-button:hover {
+    background-color: #1a3587;
+  }
+
+  .faq-content {
+    display: none;
+    padding: 10px 15px;
+    background: #f1f1f1;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .faq-button.active + .faq-content {
+    display: block;
+  }
+</style>
+
+<!-- Script FAQ -->
+<script>
+  function toggleFaqSonora() {
+    const faq = document.getElementById('faq-sonora');
+    faq.style.display = (faq.style.display === "none" || faq.style.display === "") ? "block" : "none";
+  }
+
+  const faqButtons = document.querySelectorAll('.faq-button');
+
+  faqButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      button.classList.toggle('active');
+    });
+  });
+</script>
 
 
 <section id="interprete" class="interprete-section">
@@ -219,10 +323,6 @@
   </button>
   <hr />
 </section>
-
-
-
-
 
 
     <section id="equipe">
