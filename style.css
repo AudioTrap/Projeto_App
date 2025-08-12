@@ -66,6 +66,56 @@ nav a {
   padding: 5rem 2.5rem;
   font-size: 1.4rem;
 }
+/* Autocomplete suggestions */
+.autocomplete-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(34, 161, 163, 0.15);
+  max-height: 260px;
+  overflow-y: auto;
+  z-index: 12000;
+  margin-top: 6px;
+  padding: 0;
+  border: 2px solid var(--primary);
+  overflow: hidden;
+}
+
+.autocomplete-list li {
+  list-style: none;
+  padding: 12px 18px;
+  cursor: pointer;
+  color: var(--secondary);
+  font-weight: 600;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  border-bottom: 1px solid #e0e0e0;
+  user-select: none;
+}
+
+.autocomplete-list li:last-child {
+  border-bottom: none;
+}
+
+.autocomplete-list li:hover,
+.autocomplete-list li:focus {
+  background-color: var(--primary);
+  color: var(--bg);
+  outline: none;
+}
+
+.autocomplete-list li:first-child {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.autocomplete-list li:last-child {
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
 
 /* Onda sonora horizontal */
 .sound-wave {

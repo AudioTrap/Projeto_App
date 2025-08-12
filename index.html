@@ -109,8 +109,8 @@
         <li><a href="#detector">Detector</a></li>
         <li><a href="#mapa">Mapa</a></li>
         <li><a href="#feedback">Feedback</a></li>
-        <li><a href="#sonora">Sonora</a></li>
-        <li><a href="#interprete">Intérprete</a></li>
+        <li><a href="#sonora">Informações</a></li>
+        <li><a href="#interprete">Intérprete de Libras</a></li>
         <li><a href="#equipe">Equipe</a></li>
         <li><a href="#contato">Contato</a></li>
       </ul>
@@ -144,8 +144,16 @@
       <h2 style="color:#2143A3;">Mapa Interativo</h2>
       <p>Insira seu local de origem e destino para avaliar locais e visualizar feedbacks.</p>
       <!-- Campos de origem e destino com margem entre eles e botões -->
-      <input type="text" id="start" placeholder="Endereço de origem" style="display: block; margin-bottom: 1rem;" />
-      <input type="text" id="end" placeholder="Endereço de destino" style="display: block; margin-bottom: 1.5rem;" />
+    <div class="autocomplete-wrapper" style="position: relative; margin-bottom: 1.5rem;">
+      <input type="text" id="start" placeholder="Endereço de origem" autocomplete="off" />
+      <div class="autocomplete-suggestions" id="start-suggestions" role="listbox" aria-label="Sugestões de origem"></div>
+    </div>
+
+    <div class="autocomplete-wrapper" style="position: relative; margin-bottom: 1.5rem;">
+      <input type="text" id="end" placeholder="Endereço de destino" autocomplete="off" />
+      <div class="autocomplete-suggestions" id="end-suggestions" role="listbox" aria-label="Sugestões de destino"></div>
+    </div>
+
       
       <!-- Botão separado dos campos acima -->
       <button onclick="calculateRoute()">Ver rota e feedbacks</button>
@@ -193,7 +201,7 @@
   <section id="sonora" class="sonora-section">
   <div class="sonora-title">
     <img src="imagens/sonoraFbranco.jpg" alt="Ícone da assistente Sonora" class="sonora-icon" loading="lazy" />
-    <h2 style="color: #2143A3;"><strong>Sonora</strong></h2>
+    <h2 style="color: #2143A3;"><strong>Informações</strong></h2>
   </div>
 
   <p class="sonora-description">
@@ -316,12 +324,12 @@
 <section id="interprete" class="interprete-section">
   <div class="interprete-title">
     <h2>
-      <strong>Intérprete</strong>
+      <strong>Intérprete de Libras</strong>
     </h2>
   </div>
 
   <p class="interprete-description">
-    A função <strong>Intérprete</strong> conecta você com intérpretes de Libras por videochamada, oferecendo suporte em situações cotidianas como atendimento em serviços, dúvidas e emergências.
+    A função <strong>Intérprete de Libras</strong> conecta você com intérpretes de Libras por videochamada, oferecendo suporte em situações cotidianas como atendimento em serviços, dúvidas e emergências.
   </p>
 
   <button class="interprete-button" onclick="window.open('https://meet.google.com/', '_blank')">

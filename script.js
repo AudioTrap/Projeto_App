@@ -1,4 +1,6 @@
+// ==============================
 // Firebase SDKs
+// ==============================
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-analytics.js";
 import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-database.js";
@@ -19,7 +21,9 @@ const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0
 const analytics = getAnalytics(app);
 const database = getDatabase(app);
 
+// ==============================
 // Reconhecimento de som
+// ==============================
 let recognizer;
 const modelURL = "https://teachablemachine.withgoogle.com/models/U_mjo1IdA/";
 
@@ -111,7 +115,72 @@ async function init() {
   }
 }
 
+// ==============================
+// Transcrição em tempo real com Web Speech API
+// ==============================
+
+let recognition;
+let recognizing = false;
+
+function iniciarTranscricao() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    alert('Seu navegador não suporta a API de reconhecimento de fala.');
+    return;
+  }
+
+  if (recognizing) return; // já está rodando
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = 'pt-BR';
+
+  recognition.onresult = (event) => {
+    let textoCompleto = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      textoCompleto += event.results[i][0].transcript;
+    }
+    document.getElementById('transcricao').innerText = textoCompleto;
+  };
+
+  recognition.onerror = (event) => {
+    console.error('Erro no reconhecimento de fala:', event.error);
+  };
+
+  recognition.onend = () => {
+    recognizing = false;
+    // opcional: reiniciar reconhecimento automaticamente
+    // iniciarTranscricao();
+  };
+
+  recognition.start();
+  recognizing = true;
+}
+
+function pararTranscricao() {
+  if (recognition && recognizing) {
+    recognition.stop();
+    recognizing = false;
+  }
+}
+
+// Função para alternar transcrição
+function toggleTranscricao() {
+  if (recognizing) {
+    pararTranscricao();
+    document.getElementById('audio-alert').innerText = "Transcrição parada.";
+    document.getElementById('transcricao').innerText = "";
+  } else {
+    iniciarTranscricao();
+    document.getElementById('audio-alert').innerText = "Transcrevendo áudio do ambiente...";
+  }
+}
+
+// ==============================
 // Mapa
+// ==============================
 let map;
 let markers = [];
 
@@ -154,8 +223,23 @@ async function calculateRoute() {
 
   clearMarkers();
 
-  const origemCoord = await geocode(origem);
-  const destinoCoord = await geocode(destino);
+  // Tenta achar endereço fixo para origem e destino
+  const origemFixo = buscarEnderecoFixo(origem);
+  const destinoFixo = buscarEnderecoFixo(destino);
+
+  let origemCoord, destinoCoord;
+
+  if (origemFixo) {
+    origemCoord = { lat: origemFixo.lat, lon: origemFixo.lon, display_name: origemFixo.nome + " - " + origemFixo.endereco };
+  } else {
+    origemCoord = await geocode(origem);
+  }
+
+  if (destinoFixo) {
+    destinoCoord = { lat: destinoFixo.lat, lon: destinoFixo.lon, display_name: destinoFixo.nome + " - " + destinoFixo.endereco };
+  } else {
+    destinoCoord = await geocode(destino);
+  }
 
   if (!origemCoord || !destinoCoord) {
     alert("Endereço não encontrado.");
@@ -174,7 +258,10 @@ async function calculateRoute() {
   mostrarFeedbacks(destino);
 }
 
+
+// ==============================
 // Feedbacks
+// ==============================
 function mostrarFeedbacks(destino) {
   const lista = document.getElementById("lista-feedbacks");
   lista.innerHTML = "<li>Carregando feedbacks...</li>";
@@ -227,7 +314,193 @@ document.getElementById("feedback-form").addEventListener("submit", function (e)
     });
 });
 
-// Sonora - Assistente Virtual com Menu de Perguntas
+// ==============================
+// Autocomplete Nominatim
+// ==============================
+// Endereços fixos com lat/lon
+const enderecosFixos = [
+  {
+    nome: "IFRO - Instituto Federal de Rondônia Campus Porto Velho Calama",
+    endereco: "Av. Calama, 4985 - Flodoaldo Pontes Pinto, Porto Velho - RO",
+    lat: -8.753424,
+    lon: -63.893956
+  },
+  {
+    nome: "IFRO - Instituto Federal de Rondônia Campus Porto Velho Zona Norte",
+    endereco: "Avenida Governador Jorge Teixeira 3146 Setor - Industrial, Porto Velho - RO",
+    lat: -8.752343,
+    lon: -63.903253
+  },
+  {
+    nome: "ASPVH - Associação de Surdos de Porto Velho",
+    endereco: "Av. Campos Sales, 5176 - Vila Eletronorte, Porto Velho - RO",
+    lat: -8.743708,
+    lon: -63.872004
+  },
+  {
+    nome: "Porto Velho Shopping",
+    endereco: "Av. Rio Madeira, 3288 - Flodoaldo Pontes Pinto, Porto Velho - RO",
+    lat: -8.756007,
+    lon: -63.899625
+  },
+  {
+    nome: "Defensoria Pública do Estado de Rondônia",
+    endereco: "Av. Gov. Jorge Teixeira, 1722 - Embratel, Porto Velho - RO",
+    lat: -8.751000,
+    lon: -63.902000
+  },
+  {
+    nome: "UPA Zona Sul",
+    endereco: "R. Urtiga, 1 - Nova Floresta, Porto Velho - RO",
+    lat: -8.759920,
+    lon: -63.883680
+  }
+];
+
+function buscarEnderecoFixo(nomeEndereco) {
+  const nomeLower = nomeEndereco.toLowerCase().trim();
+  return enderecosFixos.find(item =>
+    nomeLower.includes(item.nome.toLowerCase()) || nomeLower.includes(item.endereco.toLowerCase())
+  );
+}
+
+// Função para buscar sugestões (fixas + Nominatim)
+async function buscarSugestoes(query) {
+  const queryLower = query.toLowerCase();
+
+  // Filtra endereços fixos que combinam com a busca
+  const fixosFiltrados = enderecosFixos.filter(item =>
+    item.nome.toLowerCase().includes(queryLower) || item.endereco.toLowerCase().includes(queryLower)
+  ).map(item => ({
+    display_name: `${item.nome} - ${item.endereco}`,
+    lat: item.lat,
+    lon: item.lon,
+    fixo: true
+  }));
+
+  // Busca no Nominatim (limitado a Porto Velho, se quiser)
+  const portoVelhoViewbox = "-63.2,-10.5,-63.0,-10.3"; // ajustar conforme necessário
+  const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=${encodeURIComponent(query)}&viewbox=${portoVelhoViewbox}&bounded=1&accept-language=pt`;
+
+  let dados = [];
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "Accept-Language": "pt-BR",
+        "User-Agent": "AudioTrapApp/1.0 (audiotrapp4g@gmail.com)"
+      }
+    });
+    if (res.ok) {
+      dados = await res.json();
+    }
+  } catch (err) {
+    console.error("Erro no autocomplete Nominatim:", err);
+  }
+
+  return [...fixosFiltrados, ...dados];
+}
+
+// Atualiza setupAutocomplete para usar buscarSugestoes
+function setupAutocomplete(inputId) {
+  const input = document.getElementById(inputId);
+  const suggestionBox = document.createElement("div");
+  suggestionBox.className = "autocomplete-suggestions";
+  suggestionBox.style.position = "absolute";
+  suggestionBox.style.top = `${input.offsetHeight}px`;
+  suggestionBox.style.left = "0";
+  suggestionBox.style.width = "100%";
+  suggestionBox.style.background = "#fff";
+  suggestionBox.style.border = "1px solid #ccc";
+  suggestionBox.style.zIndex = "9999";
+  suggestionBox.style.maxHeight = "200px";
+  suggestionBox.style.overflowY = "auto";
+  suggestionBox.style.display = "none";
+  input.parentNode.style.position = "relative";
+  input.parentNode.appendChild(suggestionBox);
+
+  let debounceTimer;
+  input.addEventListener("input", function () {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(async () => {
+      const query = input.value.trim();
+      if (query.length < 3) {
+        suggestionBox.style.display = "none";
+        return;
+      }
+
+      const data = await buscarSugestoes(query);
+
+      suggestionBox.innerHTML = "";
+      if (data.length === 0) {
+        suggestionBox.style.display = "none";
+        return;
+      }
+
+      data.forEach(item => {
+        const option = document.createElement("div");
+        option.style.padding = "8px";
+        option.style.cursor = "pointer";
+        option.textContent = item.display_name;
+
+        option.addEventListener("click", () => {
+          input.value = item.display_name;
+          suggestionBox.style.display = "none";
+
+          clearMarkers();
+
+          if (item.fixo) {
+            // Marcar local fixo direto no mapa
+            const marker = L.marker([item.lat, item.lon])
+              .addTo(map)
+              .bindPopup(item.display_name)
+              .openPopup();
+            markers.push(marker);
+            map.setView([item.lat, item.lon], 16);
+          } else {
+            // Geocodifica endereço normal e mostra marcador
+            geocode(item.display_name).then(coord => {
+              if (coord) {
+                const marker = L.marker([coord.lat, coord.lon])
+                  .addTo(map)
+                  .bindPopup(coord.display_name)
+                  .openPopup();
+                markers.push(marker);
+                map.setView([coord.lat, coord.lon], 16);
+              }
+            });
+          }
+        });
+
+        option.addEventListener("mouseover", () => {
+          option.style.background = "#f0f0f0";
+        });
+        option.addEventListener("mouseout", () => {
+          option.style.background = "#fff";
+        });
+
+        suggestionBox.appendChild(option);
+      });
+
+      suggestionBox.style.display = "block";
+
+    }, 300);
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!suggestionBox.contains(e.target) && e.target !== input) {
+      suggestionBox.style.display = "none";
+    }
+  });
+}
+
+// Inicializa autocomplete para os dois campos
+setupAutocomplete("start");
+setupAutocomplete("end");
+
+
+// ==============================
+// Sonora Chat
+// ==============================
 const faqSonora = [
   { pergunta: "O que é o AudioTrap?", resposta: "O AudioTrap é uma solução de acessibilidade sonora que ajuda pessoas surdas a identificarem sons do ambiente e obterem informações sobre segurança e mobilidade." },
   { pergunta: "Como funciona o detector de som?", resposta: "O detector capta sons importantes, como sirenes, buzinas e latidos, e exibe alertas visuais e vibratórios." },
@@ -255,6 +528,13 @@ window.responderFaq = function (index) {
   mensagens.innerHTML += `<div><strong>Sonora:</strong> ${faqSonora[index].resposta}</div>`;
 };
 
-window.addEventListener("load", initMap);
-window.init = init;
+// ==============================
+// Inicialização
+// ==============================
+
+window.addEventListener("load", () => {
+  initMap();
+});
 window.calculateRoute = calculateRoute;
+window.toggleTranscricao = toggleTranscricao;
+
