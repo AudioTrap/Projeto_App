@@ -168,6 +168,81 @@ button:focus {
   outline: none;
 }
 
+section hr {
+  margin: 0.5rem 0;
+}
+
+section p {
+  margin: 0.25rem 0;
+}
+
+/* Seção de transcrição ajustada para ficar igual às outras funcionalidades */
+#transcricao {
+  padding: 0;              /* Sem espaçamento extra */
+  background: var(--bg);   /* Fundo branco igual às outras seções */
+  box-shadow: none;        /* Remove sombra */
+  margin-top: 1.5rem;
+}
+
+#transcricao h2 {
+  font-size: 2rem;         /* Igual aos outros títulos */
+  color: var(--secondary);
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+#transcricao-texto {
+  min-height: auto;        /* Ajusta altura automática */
+  padding: 0;              /* Sem fundo interno */
+  border: none;            /* Sem borda */
+  font-size: 1.25rem;      /* Igual às fontes principais */
+  line-height: 1.4;
+  color: var(--text);
+  text-align: left;
+  background: none;        /* Remove fundo cinza */
+}
+
+#btn-transcricao {
+  display: inline-block;   /* Igual aos outros botões */
+  margin: 0;               /* Remove centralização forçada */
+  padding: 1rem 1.6rem;    /* Igual aos outros botões */
+  font-size: 1.25rem;
+  border-radius: 12px;     /* Igual aos outros botões */
+  background: var(--highlight);
+  color: white;
+  cursor: pointer;
+}
+
+#btn-transcricao:hover,
+#btn-transcricao:focus {
+  background: var(--accent);
+  outline: none;
+}
+
+/* Caixa de transcrição das falas ao redor da pessoa */
+#transcricao-voz {
+  padding: 1rem 1.5rem;
+  border: 2px solid var(--primary);
+  border-radius: 12px;
+  background: #f9f9f9;       /* Caixa destacada */
+  font-size: 1.25rem;
+  line-height: 1.4;
+  margin-top: 1rem;
+  color: var(--text);
+}
+
+
+/* Linha separadora entre transcrição e mapa */
+.transcricao-separador {
+  width: 100%;
+  height: 0.2px;
+  background: #0000007e; /* cor preta */
+  margin: 2rem 0;
+  border-radius: 1px;
+}
+
+
+
 /* Mapa */
 #mapa {
   height: 450px;

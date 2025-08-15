@@ -25,158 +25,149 @@ const database = getDatabase(app);
 // Reconhecimento de som
 // ==============================
 let recognizer;
+let detectorAtivo = false;
 const modelURL = "https://teachablemachine.withgoogle.com/models/U_mjo1IdA/";
 
-async function createModel() {
-  const script = document.createElement('script');
-  script.src = "https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands";
-  document.head.appendChild(script);
-  await new Promise(resolve => script.onload = resolve);
-
-  recognizer = speechCommands.create("BROWSER_FFT", undefined, modelURL + "model.json", modelURL + "metadata.json");
-  await recognizer.ensureModelLoaded();
-}
-
+// Função para carregar o modelo (sem alertas)
 async function init() {
   try {
-    await createModel();
-    const classLabels = recognizer.wordLabels();
+    const script = document.createElement('script');
+    script.src = "https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands";
+    document.head.appendChild(script);
+    await new Promise(resolve => script.onload = resolve);
 
-    recognizer.listen(result => {
-      const scores = result.scores;
-      const index = scores.indexOf(Math.max(...scores));
-      const label = classLabels[index];
-      const confidence = scores[index];
-      const output = document.getElementById("audio-alert");
-      const alertImage = document.getElementById("alert-image");
-
-      output.innerText = "Aguardando som...";
-
-      if (confidence > 0.75) {
-        let emoji = "🔊";
-        let imageSrc = "imagens/ondas.jpg";
-        let nomeSom = label.toLowerCase();
-
-        if (label.toLowerCase().includes("cachorro")) {
-          emoji = "🐶";
-          imageSrc = "imagens/cachorro-latindo.png";
-          nomeSom = "Cachorro latindo";
-        } else if (label.toLowerCase().includes("buzina")) {
-          emoji = "🚗";
-          imageSrc = "imagens/buzina.png";
-          nomeSom = "Buzina";
-        } else if (label.toLowerCase().includes("palmas")) {
-          emoji = "👏";
-          imageSrc = "imagens/palmas.png";
-          nomeSom = "Palmas";
-        } else if (label.toLowerCase().includes("estalo")) {
-          emoji = "🤞";
-          imageSrc = "imagens/estalos.png";
-          nomeSom = "Estalo";
-        } else if (label.toLowerCase().includes("alarme de incêndio")) {
-          emoji = "🚨";
-          imageSrc = "imagens/sirene.png";
-          nomeSom = "Alarme de incêndio";
-        } else if (label.toLowerCase().includes("pessoas conversando")) {
-          emoji = "🗣️";
-          imageSrc = "imagens/conversa.png";
-          nomeSom = "Pessoas conversando";
-        }
-
-        output.innerHTML = `
-          <div class="detected-sound">
-            <div class="sound-name">${emoji} Som detectado: <strong>${nomeSom}</strong></div>
-            <div class="confidence">Nível do som: ${(confidence * 100).toFixed(1)}%</div>
-          </div>
-        `;
-
-        if (alertImage) {
-          alertImage.src = imageSrc;
-          alertImage.style.display = "block";
-        }
-
-        if ("vibrate" in navigator) {
-          navigator.vibrate([200, 100, 200]);
-        }
-
-      } else {
-        if (alertImage) alertImage.style.display = "none";
-      }
-
-    }, {
-      includeSpectrogram: true,
-      probabilityThreshold: 0.75,
-      invokeCallbackOnNoiseAndUnknown: true,
-      overlapFactor: 0.5,
-    });
-
+    recognizer = speechCommands.create(
+      "BROWSER_FFT",
+      undefined,
+      modelURL + "model.json",
+      modelURL + "metadata.json"
+    );
+    await recognizer.ensureModelLoaded();
+    // modelo carregado silenciosamente
   } catch (err) {
-    console.error("Erro ao iniciar reconhecimento:", err);
+    console.error("Erro ao carregar modelo:", err);
   }
 }
 
-// ==============================
-// Transcrição em tempo real com Web Speech API
-// ==============================
+// Função de callback única para tratar resultados
+function handleResult(result) {
+  const scores = result.scores;
+  const classLabels = recognizer.wordLabels();
+  const index = scores.indexOf(Math.max(...scores));
+  const label = classLabels[index];
+  const confidence = scores[index];
 
-let recognition;
-let recognizing = false;
+  const output = document.getElementById("audio-alert");
+  const alertImage = document.getElementById("alert-image");
 
-function iniciarTranscricao() {
-  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-    alert('Seu navegador não suporta a API de reconhecimento de fala.');
+  output.innerText = "Aguardando som...";
+
+  if (confidence > 0.75) {
+    let emoji = "🔊", imageSrc = "imagens/ondas.jpg", nomeSom = label.toLowerCase();
+
+    if (label.toLowerCase().includes("cachorro")) { emoji="🐶"; imageSrc="imagens/cachorro-latindo.png"; nomeSom="Cachorro latindo"; }
+    else if (label.toLowerCase().includes("buzina")) { emoji="🚗"; imageSrc="imagens/buzina.png"; nomeSom="Buzina"; }
+    else if (label.toLowerCase().includes("palmas")) { emoji="👏"; imageSrc="imagens/palmas.png"; nomeSom="Palmas"; }
+    else if (label.toLowerCase().includes("estalo")) { emoji="🤞"; imageSrc="imagens/estalos.png"; nomeSom="Estalo"; }
+    else if (label.toLowerCase().includes("alarme de incêndio")) { emoji="🚨"; imageSrc="imagens/sirene.png"; nomeSom="Alarme de incêndio"; }
+    else if (label.toLowerCase().includes("pessoas conversando")) { emoji="🗣️"; imageSrc="imagens/conversa.png"; nomeSom="Pessoas conversando"; }
+
+    output.innerHTML = `<div class="detected-sound">
+      <div class="sound-name">${emoji} Som detectado: <strong>${nomeSom}</strong></div>
+      <div class="confidence">Nível do som: ${(confidence*100).toFixed(1)}%</div>
+    </div>`;
+
+    if (alertImage) { alertImage.src=imageSrc; alertImage.style.display="block"; }
+    if ("vibrate" in navigator) navigator.vibrate([200,100,200]);
+  } else {
+    if (alertImage) alertImage.style.display="none";
+  }
+}
+
+// Função para alternar ligar/desligar a detecção
+function toggleDetector() {
+  const output = document.getElementById("audio-alert");
+  const alertImage = document.getElementById("alert-image");
+
+  if (!detectorAtivo) {
+    if (!recognizer) return; // se não carregou ainda, ignora
+    recognizer.listen(handleResult, {
+      includeSpectrogram: true,
+      probabilityThreshold: 0.75,
+      overlapFactor: 0.5
+    });
+    document.getElementById("btn-detector").innerText = "🛑 Parar Detecção de Som";
+    detectorAtivo = true;
+  } else {
+    recognizer.stopListening();
+    document.getElementById("btn-detector").innerText = "🎤 Ativar Detecção de Som";
+    detectorAtivo = false;
+    // limpa exibição de som detectado e imagem
+    if (output) output.innerHTML = "";
+    if (alertImage) alertImage.style.display = "none";
+  }
+}
+
+window.toggleDetector = toggleDetector;
+
+// ==============================
+// TRANSCRIÇÃO DE FALA
+// ==============================
+let recognition = null;
+let transcrevendo = false;
+
+function toggleTranscricao() {
+  const output = document.getElementById("transcricao-texto");
+  const btn = document.getElementById("btn-transcricao");
+
+  if (!("webkitSpeechRecognition" in window)) {
+    alert("Seu navegador não suporta transcrição de voz em tempo real.");
     return;
   }
 
-  if (recognizing) return; // já está rodando
+  if (!recognition) {
+    recognition = new webkitSpeechRecognition();
+    recognition.lang = "pt-BR";
+    recognition.continuous = true;
+    recognition.interimResults = true;
 
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  recognition = new SpeechRecognition();
+    recognition.onresult = function(event) {
+      let texto = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        texto += event.results[i][0].transcript;
+      }
+      output.innerText = texto.trim();
+    };
 
-  recognition.continuous = true;
-  recognition.interimResults = true;
-  recognition.lang = 'pt-BR';
+    recognition.onerror = function(event) {
+      console.error("Erro na transcrição:", event.error);
+    };
 
-  recognition.onresult = (event) => {
-    let textoCompleto = '';
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      textoCompleto += event.results[i][0].transcript;
-    }
-    document.getElementById('transcricao').innerText = textoCompleto;
-  };
-
-  recognition.onerror = (event) => {
-    console.error('Erro no reconhecimento de fala:', event.error);
-  };
-
-  recognition.onend = () => {
-    recognizing = false;
-    // opcional: reiniciar reconhecimento automaticamente
-    // iniciarTranscricao();
-  };
-
-  recognition.start();
-  recognizing = true;
-}
-
-function pararTranscricao() {
-  if (recognition && recognizing) {
-    recognition.stop();
-    recognizing = false;
+    recognition.onend = function() {
+      if (transcrevendo) recognition.start(); // mantém ligado
+    };
   }
-}
+  recognizer.listen(handleResult, { 
+    includeSpectrogram: true, 
+    probabilityThreshold: 0.6,  // detecta antes
+    overlapFactor: 0.7          // mais frequente
+});
 
-// Função para alternar transcrição
-function toggleTranscricao() {
-  if (recognizing) {
-    pararTranscricao();
-    document.getElementById('audio-alert').innerText = "Transcrição parada.";
-    document.getElementById('transcricao').innerText = "";
+
+  if (!transcrevendo) {
+    recognition.start();
+    btn.innerText = "🛑 Parar Transcrição";
+    transcrevendo = true;
   } else {
-    iniciarTranscricao();
-    document.getElementById('audio-alert').innerText = "Transcrevendo áudio do ambiente...";
+    recognition.stop();
+    btn.innerText = "🎙️ Iniciar Transcrição";
+    transcrevendo = false;
+    output.innerText = "A fala detectada será exibida aqui...";
   }
 }
+
+window.toggleTranscricao = toggleTranscricao;
+
 
 // ==============================
 // Mapa
@@ -211,6 +202,7 @@ async function geocode(address) {
     return null;
   }
 }
+let rotaPolyline = null;
 
 async function calculateRoute() {
   const origem = document.getElementById("start").value.trim();
@@ -255,9 +247,13 @@ async function calculateRoute() {
   markers.push(origemMarker, destinoMarker);
   map.fitBounds(L.featureGroup(markers).getBounds(), { padding: [50, 50] });
 
+  if (rotaPolyline) map.fitBounds(L.featureGroup(markers).getBounds(), { padding: [50, 50] });;
+  rotaPolyline = L.polyline([[origemCoord.lat, origemCoord.lon], [destinoCoord.lat, destinoCoord.lon]], { color: 'blue' }).addTo(map);
+  
+  map.fitBounds(L.featureGroup([...markers, rotaPolyline]).getBounds(), { padding: [50, 50] });
+  
   mostrarFeedbacks(destino);
-}
-
+};
 
 // ==============================
 // Feedbacks
@@ -534,7 +530,9 @@ window.responderFaq = function (index) {
 
 window.addEventListener("load", () => {
   initMap();
+  init(); // inicia detecção de sons
 });
+
 window.calculateRoute = calculateRoute;
 window.toggleTranscricao = toggleTranscricao;
 
