@@ -202,6 +202,19 @@ section p {
   background: none;        /* Remove fundo cinza */
 }
 
+/* Ajuste do título da transcrição em celulares */
+@media (max-width: 500px) {
+  #transcricao h2 {
+    font-size: 1.7rem;  /* reduz do 2rem para algo menor */
+  }
+
+  #transcricao-texto {
+    font-size: 1.3rem;    /* também reduz o texto da transcrição se necessário */
+  }
+}
+
+
+
 #btn-transcricao {
   display: inline-block;   /* Igual aos outros botões */
   margin: 0;               /* Remove centralização forçada */
