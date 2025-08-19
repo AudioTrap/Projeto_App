@@ -556,11 +556,37 @@ input[type=range]::-moz-range-thumb:hover {
     font-size: 1rem;
   }
 
+  /* Desktop e tablets */
+.sonora-title, .interprete-title {
+  display: flex;
+  align-items: center;
+  gap: 14px; /* espaço entre foto e título */
+}
+
+/* Celulares muito pequenos */
+@media (max-width: 400px) {
   .sonora-title {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+    flex-direction: row;       /* ícone ao lado do título */
+    align-items: center;       /* centraliza verticalmente */
+    gap: 10px;                 /* mantém o espaçamento */
   }
+}
+
+@media (max-width: 768px) {
+  section {
+    padding: 2.5rem 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  button, .interprete-button, .sonora-button {
+    font-size: 1.1rem;
+    padding: 12px 20px;
+  }
+}
+
 
   .sonora-title h2 {
     font-size: 1.5rem;
