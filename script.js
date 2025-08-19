@@ -116,6 +116,16 @@ window.toggleDetector = toggleDetector;
 let recognition = null;
 let transcrevendo = false;
 
+window.addEventListener("DOMContentLoaded", () => {
+  const output = document.getElementById("transcricao-texto");
+  const btn = document.getElementById("btn-transcricao");
+
+  if (!("webkitSpeechRecognition" in window)) {
+    output.innerText = "⚠️ Seu navegador não suporta transcrição de voz em tempo real. Use o Google Chrome no Android.";
+    if (btn) btn.style.display = "none"; // esconde botão se não for compatível
+  }
+});
+
 function toggleTranscricao() {
   const output = document.getElementById("transcricao-texto");
   const btn = document.getElementById("btn-transcricao");
@@ -147,12 +157,6 @@ function toggleTranscricao() {
       if (transcrevendo) recognition.start(); // mantém ligado
     };
   }
-  recognizer.listen(handleResult, { 
-    includeSpectrogram: true, 
-    probabilityThreshold: 0.6,  // detecta antes
-    overlapFactor: 0.7          // mais frequente
-});
-
 
   if (!transcrevendo) {
     recognition.start();
@@ -213,7 +217,14 @@ async function calculateRoute() {
     return;
   }
 
+  // Limpa marcadores antigos
   clearMarkers();
+
+  // Remove a rota antiga do mapa, se existir
+  if (rotaPolyline) {
+    map.removeLayer(rotaPolyline);
+    rotaPolyline = null;
+  }
 
   // Tenta achar endereço fixo para origem e destino
   const origemFixo = buscarEnderecoFixo(origem);
@@ -238,6 +249,7 @@ async function calculateRoute() {
     return;
   }
 
+  // Adiciona marcadores
   const origemMarker = L.marker([origemCoord.lat, origemCoord.lon]).bindPopup(`Origem: ${origemCoord.display_name}`);
   const destinoMarker = L.marker([destinoCoord.lat, destinoCoord.lon]).bindPopup(`Destino: ${destinoCoord.display_name}`);
 
@@ -245,15 +257,16 @@ async function calculateRoute() {
   destinoMarker.addTo(map);
 
   markers.push(origemMarker, destinoMarker);
-  map.fitBounds(L.featureGroup(markers).getBounds(), { padding: [50, 50] });
 
-  if (rotaPolyline) map.fitBounds(L.featureGroup(markers).getBounds(), { padding: [50, 50] });;
+  // Cria nova rota
   rotaPolyline = L.polyline([[origemCoord.lat, origemCoord.lon], [destinoCoord.lat, destinoCoord.lon]], { color: 'blue' }).addTo(map);
-  
+
+  // Ajusta zoom para abranger marcadores e rota
   map.fitBounds(L.featureGroup([...markers, rotaPolyline]).getBounds(), { padding: [50, 50] });
-  
+
   mostrarFeedbacks(destino);
 };
+
 
 // ==============================
 // Feedbacks
@@ -340,7 +353,7 @@ const enderecosFixos = [
     lon: -63.899625
   },
   {
-    nome: "Defensoria Pública do Estado de Rondônia",
+    nome: "DPE/RO - Defensoria Pública do Estado de Rondônia",
     endereco: "Av. Gov. Jorge Teixeira, 1722 - Embratel, Porto Velho - RO",
     lat: -8.751000,
     lon: -63.902000
